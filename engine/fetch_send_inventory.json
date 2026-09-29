@@ -1,0 +1,1298 @@
+{
+  "a1_offline_helper_sha256": {
+    "engine.stock_validate.load_ibkr_earliest": "9af1173a1dd8428e0427c8b883bf4bd864299154fab88bc22c5b6cc3b22a2904",
+    "engine.stock_validate.record_ibkr_earliest": "ae6fbe5ade9bb4d4ab0dd352fb0ebc0f08da235858e1f2375d6beac79ab3277a"
+  },
+  "candidate_count": 71,
+  "candidate_surface_sha256": "97e55c2e20171b01bfc22fb23c09ed000b4945ac3eb04aec395d247506a2660a",
+  "disposition_counts": {
+    "a1_context_required": 11,
+    "a2_refused": 32,
+    "control_message": 16,
+    "control_probe": 1,
+    "control_socket": 6,
+    "guarded_choke_point": 5
+  },
+  "logical_producer_count": 60,
+  "primitive_counts": {
+    "adapter_fetch": 25,
+    "adapter_head": 6,
+    "http_opener_open": 1,
+    "http_urlopen": 5,
+    "ibkr_non_req": 22,
+    "ibkr_raw_bars": 1,
+    "ibkr_raw_head": 1,
+    "ibkr_raw_request": 3,
+    "provider_fetch": 1,
+    "socket": 5,
+    "socket_dns": 1
+  },
+  "raw_choke_points": {
+    "ibkr_bars": "engine.stock_ibkr:LiveIB.fetch.transport:ibkr_raw_bars:1",
+    "ibkr_head": "engine.stock_ibkr:LiveIB.head_timestamp:ibkr_raw_head:1"
+  },
+  "schema_version": 1,
+  "sites": [
+    {
+      "call": "stock_ibkr.LiveIB( host=stock_ibkr.HOST_DEFAULT, ports=(port,), client_id=stock_ibkr.CLIENT_ID_FETCH).connect()",
+      "caller_chain": [
+        "DataViewerApp",
+        "_fixdata_start",
+        "_engine_run",
+        "_adapter"
+      ],
+      "column": 27,
+      "disposition": "control_message",
+      "line": 8274,
+      "module": "display_data",
+      "primitive": "ibkr_non_req",
+      "producer_id": "ibkr.control.display_data.fixdata",
+      "qualname": "DataViewerApp._fixdata_start._engine_run._adapter",
+      "reason": "connection setup or adapter connection wrapper only; no market-data response is consumed; downstream data sends retain their own guards",
+      "site_key": "display_data:DataViewerApp._fixdata_start._engine_run._adapter:ibkr_non_req:1",
+      "transport": "ibkr-control"
+    },
+    {
+      "call": "urllib.request.urlopen(\"https://pypi.org/simple/\", timeout=10, context=ctx)",
+      "caller_chain": [
+        "print_diagnostics"
+      ],
+      "column": 13,
+      "disposition": "control_probe",
+      "line": 342,
+      "module": "display_data",
+      "primitive": "http_urlopen",
+      "producer_id": "http.display_data.pypi_connectivity",
+      "qualname": "print_diagnostics",
+      "reason": "diagnostic PyPI connectivity probe; reports HTTP status only and consumes no market data",
+      "site_key": "display_data:print_diagnostics:http_urlopen:1",
+      "transport": "http-control"
+    },
+    {
+      "call": "urllib.request.urlopen(request, timeout=self.timeout)",
+      "caller_chain": [
+        "StockAnalysisProvider",
+        "_read"
+      ],
+      "column": 17,
+      "disposition": "a2_refused",
+      "line": 624,
+      "module": "engine.external_sweep",
+      "primitive": "http_urlopen",
+      "producer_id": "http.stockanalysis.external_sweep",
+      "qualname": "StockAnalysisProvider._read",
+      "reason": "A2 HTTP path; refused at its seam switch until A2 approval",
+      "site_key": "engine.external_sweep:StockAnalysisProvider._read:http_urlopen:1",
+      "transport": "http-series"
+    },
+    {
+      "call": "provider.fetch(symbol, **options)",
+      "caller_chain": [
+        "_provider_fetch"
+      ],
+      "column": 17,
+      "disposition": "a2_refused",
+      "line": 1044,
+      "module": "engine.external_sweep",
+      "primitive": "provider_fetch",
+      "producer_id": "http.stockanalysis.provider_dispatch",
+      "qualname": "_provider_fetch",
+      "reason": "logical provider dispatch for the A2 StockAnalysis seam; the raw send is separately inventoried",
+      "site_key": "engine.external_sweep:_provider_fetch:provider_fetch:1",
+      "transport": "http-series"
+    },
+    {
+      "call": "urllib.request.OpenerDirector.open( opener, wire, timeout=deadline.remaining())",
+      "caller_chain": [
+        "guarded_stockanalysis_attempt",
+        "one_send"
+      ],
+      "column": 31,
+      "disposition": "a2_refused",
+      "line": 153,
+      "module": "engine.fetch_http_labels",
+      "primitive": "http_opener_open",
+      "producer_id": "http.stockanalysis.owned_default",
+      "qualname": "guarded_stockanalysis_attempt.one_send",
+      "reason": "shared owned physical open; validation/sweep worker, admission, turn and durable decision precede it; A2 remains held",
+      "site_key": "engine.fetch_http_labels:guarded_stockanalysis_attempt.one_send:http_opener_open:1",
+      "transport": "http-series"
+    },
+    {
+      "call": "super().connect()",
+      "caller_chain": [
+        "DeadlineHTTPSConnection",
+        "connect"
+      ],
+      "column": 8,
+      "disposition": "a2_refused",
+      "line": 171,
+      "module": "engine.fetch_http_transport",
+      "primitive": "ibkr_non_req",
+      "producer_id": "http.stockanalysis.connection.tls",
+      "qualname": "DeadlineHTTPSConnection.connect",
+      "reason": "stdlib HTTPS connect with verified context and remaining handshake budget; parent connect tripwires retained",
+      "site_key": "engine.fetch_http_transport:DeadlineHTTPSConnection.connect:ibkr_non_req:1",
+      "transport": "http-control"
+    },
+    {
+      "call": "socket.getaddrinfo(_HOST, 443, type=socket.SOCK_STREAM, proto=socket.IPPROTO_TCP)",
+      "caller_chain": [
+        "_lookup_addresses"
+      ],
+      "column": 11,
+      "disposition": "a2_refused",
+      "line": 86,
+      "module": "engine.fetch_http_transport",
+      "primitive": "socket_dns",
+      "producer_id": "http.stockanalysis.dns",
+      "qualname": "_lookup_addresses",
+      "reason": "fixed StockAnalysis DNS only; single outstanding lookup, bounded caller wait, no background request or send",
+      "site_key": "engine.fetch_http_transport:_lookup_addresses:socket_dns:1",
+      "transport": "http-control"
+    },
+    {
+      "call": "socket.socket(family, kind, protocol)",
+      "caller_chain": [
+        "_make_socket"
+      ],
+      "column": 11,
+      "disposition": "a2_refused",
+      "line": 125,
+      "module": "engine.fetch_http_transport",
+      "primitive": "socket",
+      "producer_id": "http.stockanalysis.connection.socket",
+      "qualname": "_make_socket",
+      "reason": "request-owned socket under the same total deadline; only the guarded default open reaches this helper",
+      "site_key": "engine.fetch_http_transport:_make_socket:socket:1",
+      "transport": "http-control"
+    },
+    {
+      "call": "sock.connect(target)",
+      "caller_chain": [
+        "connect_resolved"
+      ],
+      "column": 12,
+      "disposition": "a2_refused",
+      "line": 142,
+      "module": "engine.fetch_http_transport",
+      "primitive": "ibkr_non_req",
+      "producer_id": "http.stockanalysis.connection.connect",
+      "qualname": "connect_resolved",
+      "reason": "fixed-host resolved TCP setup; deadline-bound address fallback sends no HTTP request; socket tripwires retained",
+      "site_key": "engine.fetch_http_transport:connect_resolved:ibkr_non_req:1",
+      "transport": "http-control"
+    },
+    {
+      "call": "sk.LiveIB(host=sk.HOST_DEFAULT, ports=(port,), client_id=sk.CLIENT_ID_FETCH).connect()",
+      "caller_chain": [
+        "_connect"
+      ],
+      "column": 11,
+      "disposition": "control_message",
+      "line": 258,
+      "module": "engine.live_combined_flags",
+      "primitive": "ibkr_non_req",
+      "producer_id": "ibkr.control.live_combined_flags",
+      "qualname": "_connect",
+      "reason": "connection setup or adapter connection wrapper only; no market-data response is consumed; downstream data sends retain their own guards",
+      "site_key": "engine.live_combined_flags:_connect:ibkr_non_req:1",
+      "transport": "ibkr-control"
+    },
+    {
+      "call": "adapter.fetch(contract, end.replace(tzinfo=None), \"2 M\", \"1 day\", what_to_show=\"TRADES\")",
+      "caller_chain": [
+        "_fetch_month_1d"
+      ],
+      "column": 14,
+      "disposition": "a2_refused",
+      "line": 116,
+      "module": "engine.live_combined_flags",
+      "primitive": "adapter_fetch",
+      "producer_id": "ibkr.live_combined_flags.daily_refetch",
+      "qualname": "_fetch_month_1d",
+      "reason": "A2 path; refused at the guarded LiveIB choke point until A2 approval",
+      "site_key": "engine.live_combined_flags:_fetch_month_1d:adapter_fetch:1",
+      "transport": "ibkr-bars"
+    },
+    {
+      "call": "adapter.fetch(contract, end.replace(tzinfo=None), \"1 M\", \"1 min\", what_to_show=\"TRADES\")",
+      "caller_chain": [
+        "_fetch_month_1m"
+      ],
+      "column": 14,
+      "disposition": "a2_refused",
+      "line": 100,
+      "module": "engine.live_combined_flags",
+      "primitive": "adapter_fetch",
+      "producer_id": "ibkr.live_combined_flags.minute_month",
+      "qualname": "_fetch_month_1m",
+      "reason": "A2 path; refused at the guarded LiveIB choke point until A2 approval",
+      "site_key": "engine.live_combined_flags:_fetch_month_1m:adapter_fetch:1",
+      "transport": "ibkr-bars"
+    },
+    {
+      "call": "sk.LiveIB().connect()",
+      "caller_chain": [
+        "_feature_body"
+      ],
+      "column": 35,
+      "disposition": "control_message",
+      "line": 108,
+      "module": "engine.live_feature_check",
+      "primitive": "ibkr_non_req",
+      "producer_id": "ibkr.control.live_feature_check",
+      "qualname": "_feature_body",
+      "reason": "connection setup or adapter connection wrapper only; no market-data response is consumed; downstream data sends retain their own guards",
+      "site_key": "engine.live_feature_check:_feature_body:ibkr_non_req:1",
+      "transport": "ibkr-control"
+    },
+    {
+      "call": "sk.LiveIB().connect()",
+      "caller_chain": [
+        "_feature_body"
+      ],
+      "column": 38,
+      "disposition": "control_message",
+      "line": 110,
+      "module": "engine.live_feature_check",
+      "primitive": "ibkr_non_req",
+      "producer_id": "ibkr.control.live_feature_check",
+      "qualname": "_feature_body",
+      "reason": "connection setup or adapter connection wrapper only; no market-data response is consumed; downstream data sends retain their own guards",
+      "site_key": "engine.live_feature_check:_feature_body:ibkr_non_req:2",
+      "transport": "ibkr-control"
+    },
+    {
+      "call": "sk.LiveIB().connect()",
+      "caller_chain": [
+        "_feature_body"
+      ],
+      "column": 34,
+      "disposition": "control_message",
+      "line": 112,
+      "module": "engine.live_feature_check",
+      "primitive": "ibkr_non_req",
+      "producer_id": "ibkr.control.live_feature_check",
+      "qualname": "_feature_body",
+      "reason": "connection setup or adapter connection wrapper only; no market-data response is consumed; downstream data sends retain their own guards",
+      "site_key": "engine.live_feature_check:_feature_body:ibkr_non_req:3",
+      "transport": "ibkr-control"
+    },
+    {
+      "call": "adapter.fetch(contract, end_dt.replace(tzinfo=None), duration, \"1 day\", what_to_show=\"TRADES\")",
+      "caller_chain": [
+        "_premise_request"
+      ],
+      "column": 14,
+      "disposition": "a2_refused",
+      "line": 83,
+      "module": "engine.live_internal_daily_check",
+      "primitive": "adapter_fetch",
+      "producer_id": "ibkr.live_internal_daily_check.daily",
+      "qualname": "_premise_request",
+      "reason": "A2 path; refused at the guarded LiveIB choke point until A2 approval",
+      "site_key": "engine.live_internal_daily_check:_premise_request:adapter_fetch:1",
+      "transport": "ibkr-bars"
+    },
+    {
+      "call": "sk.LiveIB(host=sk.HOST_DEFAULT, ports=(port,), client_id=sk.CLIENT_ID_FETCH).connect()",
+      "caller_chain": [
+        "_connect"
+      ],
+      "column": 11,
+      "disposition": "control_message",
+      "line": 188,
+      "module": "engine.live_internal_revalidate",
+      "primitive": "ibkr_non_req",
+      "producer_id": "ibkr.control.live_internal_revalidate",
+      "qualname": "_connect",
+      "reason": "connection setup or adapter connection wrapper only; no market-data response is consumed; downstream data sends retain their own guards",
+      "site_key": "engine.live_internal_revalidate:_connect:ibkr_non_req:1",
+      "transport": "ibkr-control"
+    },
+    {
+      "call": "adapter.fetch(contract, end_dt.replace(tzinfo=None), dur, \"1 day\", what_to_show=\"TRADES\")",
+      "caller_chain": [
+        "_internal_daily"
+      ],
+      "column": 20,
+      "disposition": "a2_refused",
+      "line": 130,
+      "module": "engine.live_internal_revalidate",
+      "primitive": "adapter_fetch",
+      "producer_id": "ibkr.live_internal_revalidate.daily",
+      "qualname": "_internal_daily",
+      "reason": "A2 path; refused at the guarded LiveIB choke point until A2 approval",
+      "site_key": "engine.live_internal_revalidate:_internal_daily:adapter_fetch:1",
+      "transport": "ibkr-bars"
+    },
+    {
+      "call": "adapter.fetch(contract, end.replace(tzinfo=None), \"1 D\", \"1 min\", what_to_show=\"TRADES\")",
+      "caller_chain": [
+        "_internal_minute"
+      ],
+      "column": 14,
+      "disposition": "a2_refused",
+      "line": 142,
+      "module": "engine.live_internal_revalidate",
+      "primitive": "adapter_fetch",
+      "producer_id": "ibkr.live_internal_revalidate.minute_refetch",
+      "qualname": "_internal_minute",
+      "reason": "A2 path; refused at the guarded LiveIB choke point until A2 approval",
+      "site_key": "engine.live_internal_revalidate:_internal_minute:adapter_fetch:1",
+      "transport": "ibkr-bars"
+    },
+    {
+      "call": "sk.LiveIB( host=sk.HOST_DEFAULT, ports=(int(port),), client_id=client_id, ).connect()",
+      "caller_chain": [
+        "connect"
+      ],
+      "column": 14,
+      "disposition": "control_message",
+      "line": 148,
+      "module": "engine.live_kind_smoke",
+      "primitive": "ibkr_non_req",
+      "producer_id": "ibkr.control.live_kind_smoke",
+      "qualname": "connect",
+      "reason": "connection setup or adapter connection wrapper only; no market-data response is consumed; downstream data sends retain their own guards",
+      "site_key": "engine.live_kind_smoke:connect:ibkr_non_req:1",
+      "transport": "ibkr-control"
+    },
+    {
+      "call": "adapter.fetch(contract, end.replace(tzinfo=None), \"5 D\", \"1 day\", what_to_show=\"HISTORICAL_VOLATILITY\")",
+      "caller_chain": [
+        "test_hvol_daily"
+      ],
+      "column": 15,
+      "disposition": "a2_refused",
+      "line": 256,
+      "module": "engine.live_kind_smoke",
+      "primitive": "adapter_fetch",
+      "producer_id": "ibkr.live_kind_smoke.hvol_daily",
+      "qualname": "test_hvol_daily",
+      "reason": "A2 path; refused at the guarded LiveIB choke point until A2 approval",
+      "site_key": "engine.live_kind_smoke:test_hvol_daily:adapter_fetch:1",
+      "transport": "ibkr-bars"
+    },
+    {
+      "call": "adapter.fetch(contract, minute_end.replace(tzinfo=None), \"1 D\", \"1 min\", what_to_show=\"HISTORICAL_VOLATILITY\")",
+      "caller_chain": [
+        "test_hvol_daily"
+      ],
+      "column": 16,
+      "disposition": "a2_refused",
+      "line": 282,
+      "module": "engine.live_kind_smoke",
+      "primitive": "adapter_fetch",
+      "producer_id": "ibkr.live_kind_smoke.hvol_intraday",
+      "qualname": "test_hvol_daily",
+      "reason": "A2 path; refused at the guarded LiveIB choke point until A2 approval",
+      "site_key": "engine.live_kind_smoke:test_hvol_daily:adapter_fetch:2",
+      "transport": "ibkr-bars"
+    },
+    {
+      "call": "adapter.fetch(contract, end.replace(tzinfo=None), \"1 D\", \"1 min\", what_to_show=\"OPTION_IMPLIED_VOLATILITY\")",
+      "caller_chain": [
+        "test_iv_rth_only"
+      ],
+      "column": 15,
+      "disposition": "a2_refused",
+      "line": 319,
+      "module": "engine.live_kind_smoke",
+      "primitive": "adapter_fetch",
+      "producer_id": "ibkr.live_kind_smoke.iv_rth",
+      "qualname": "test_iv_rth_only",
+      "reason": "A2 path; refused at the guarded LiveIB choke point until A2 approval",
+      "site_key": "engine.live_kind_smoke:test_iv_rth_only:adapter_fetch:1",
+      "transport": "ibkr-bars-unfiltered"
+    },
+    {
+      "call": "adapter.fetch(contract, end.replace(tzinfo=None), \"5 D\", \"1 day\", what_to_show=\"OPTION_IMPLIED_VOLATILITY\")",
+      "caller_chain": [
+        "test_raw_daily_shape"
+      ],
+      "column": 15,
+      "disposition": "a2_refused",
+      "line": 190,
+      "module": "engine.live_kind_smoke",
+      "primitive": "adapter_fetch",
+      "producer_id": "ibkr.live_kind_smoke.iv_daily",
+      "qualname": "test_raw_daily_shape",
+      "reason": "A2 path; refused at the guarded LiveIB choke point until A2 approval",
+      "site_key": "engine.live_kind_smoke:test_raw_daily_shape:adapter_fetch:1",
+      "transport": "ibkr-bars"
+    },
+    {
+      "call": "adapter.fetch(contract, end.replace(tzinfo=None), \"1 D\", \"1 min\", what_to_show=\"OPTION_IMPLIED_VOLATILITY\")",
+      "caller_chain": [
+        "test_raw_iv_intraday"
+      ],
+      "column": 15,
+      "disposition": "a2_refused",
+      "line": 224,
+      "module": "engine.live_kind_smoke",
+      "primitive": "adapter_fetch",
+      "producer_id": "ibkr.live_kind_smoke.iv_intraday",
+      "qualname": "test_raw_iv_intraday",
+      "reason": "A2 path; refused at the guarded LiveIB choke point until A2 approval",
+      "site_key": "engine.live_kind_smoke:test_raw_iv_intraday:adapter_fetch:1",
+      "transport": "ibkr-bars"
+    },
+    {
+      "call": "adapter.fetch(contract, end.replace(tzinfo=None), dur, \"1 day\", what_to_show=\"TRADES\")",
+      "caller_chain": [
+        "test_span_probe"
+      ],
+      "column": 23,
+      "disposition": "a2_refused",
+      "line": 520,
+      "module": "engine.live_kind_smoke",
+      "primitive": "adapter_fetch",
+      "producer_id": "ibkr.live_kind_smoke.span_probe",
+      "qualname": "test_span_probe",
+      "reason": "A2 path; refused at the guarded LiveIB choke point until A2 approval",
+      "site_key": "engine.live_kind_smoke:test_span_probe:adapter_fetch:1",
+      "transport": "ibkr-bars"
+    },
+    {
+      "call": "sender.fetch(contract, end_dt, DAILY_REQUEST_DURATION, DAILY_BAR_SIZE, what_to_show)",
+      "caller_chain": [
+        "IBKRDailySpanFetcher",
+        "fetch_span"
+      ],
+      "column": 22,
+      "disposition": "a2_refused",
+      "line": 2026,
+      "module": "engine.live_spot_probe",
+      "primitive": "adapter_fetch",
+      "producer_id": "ibkr.live_spot_probe.daily",
+      "qualname": "IBKRDailySpanFetcher.fetch_span",
+      "reason": "A2 path; refused at the guarded LiveIB choke point until A2 approval",
+      "site_key": "engine.live_spot_probe:IBKRDailySpanFetcher.fetch_span:adapter_fetch:1",
+      "transport": "ibkr-bars"
+    },
+    {
+      "call": "sender.fetch(contract, end_dt, duration, \"1 min\", \"TRADES\")",
+      "caller_chain": [
+        "IBKRMinuteDayFetcher",
+        "fetch_day"
+      ],
+      "column": 22,
+      "disposition": "a2_refused",
+      "line": 1953,
+      "module": "engine.live_spot_probe",
+      "primitive": "adapter_fetch",
+      "producer_id": "ibkr.live_spot_probe.minute",
+      "qualname": "IBKRMinuteDayFetcher.fetch_day",
+      "reason": "A2 path; refused at the guarded LiveIB choke point until A2 approval",
+      "site_key": "engine.live_spot_probe:IBKRMinuteDayFetcher.fetch_day:adapter_fetch:1",
+      "transport": "ibkr-bars"
+    },
+    {
+      "call": "module.LiveIB( host=host, ports=(self.requested_port,), client_id=module.CLIENT_ID_SPOT_PROBE).connect()",
+      "caller_chain": [
+        "IBKRMinuteDayFetcher",
+        "start"
+      ],
+      "column": 28,
+      "disposition": "control_message",
+      "line": 1928,
+      "module": "engine.live_spot_probe",
+      "primitive": "ibkr_non_req",
+      "producer_id": "ibkr.control.live_spot_probe",
+      "qualname": "IBKRMinuteDayFetcher.start",
+      "reason": "connection setup or adapter connection wrapper only; no market-data response is consumed; downstream data sends retain their own guards",
+      "site_key": "engine.live_spot_probe:IBKRMinuteDayFetcher.start:ibkr_non_req:1",
+      "transport": "ibkr-control"
+    },
+    {
+      "call": "sk.LiveIB(host=sk.HOST_DEFAULT, ports=(p,), client_id=sk.CLIENT_ID_FETCH).connect()",
+      "caller_chain": [
+        "_catchup_port"
+      ],
+      "column": 29,
+      "disposition": "control_message",
+      "line": 104,
+      "module": "engine.live_validate_catchup",
+      "primitive": "ibkr_non_req",
+      "producer_id": "ibkr.control.live_validate_catchup",
+      "qualname": "_catchup_port",
+      "reason": "connection setup or adapter connection wrapper only; no market-data response is consumed; downstream data sends retain their own guards",
+      "site_key": "engine.live_validate_catchup:_catchup_port:ibkr_non_req:1",
+      "transport": "ibkr-control"
+    },
+    {
+      "call": "s.connect((\"127.0.0.1\", port))",
+      "caller_chain": [
+        "live_ports"
+      ],
+      "column": 12,
+      "disposition": "control_socket",
+      "line": 59,
+      "module": "engine.row82_vol_reconcile_run",
+      "primitive": "ibkr_non_req",
+      "producer_id": "socket.row82.live_ports",
+      "qualname": "live_ports",
+      "reason": "control-plane port probe only; no market-data response is consumed",
+      "site_key": "engine.row82_vol_reconcile_run:live_ports:ibkr_non_req:1",
+      "transport": "socket-control"
+    },
+    {
+      "call": "socket.socket()",
+      "caller_chain": [
+        "live_ports"
+      ],
+      "column": 12,
+      "disposition": "control_socket",
+      "line": 56,
+      "module": "engine.row82_vol_reconcile_run",
+      "primitive": "socket",
+      "producer_id": "socket.row82.live_ports",
+      "qualname": "live_ports",
+      "reason": "control-plane port probe only; no market-data response is consumed",
+      "site_key": "engine.row82_vol_reconcile_run:live_ports:socket:1",
+      "transport": "socket-control"
+    },
+    {
+      "call": "(opener or urllib.request.urlopen)(req, timeout=timeout)",
+      "caller_chain": [
+        "_http"
+      ],
+      "column": 11,
+      "disposition": "a2_refused",
+      "line": 98,
+      "module": "engine.sp500",
+      "primitive": "http_urlopen",
+      "producer_id": "http.sp500.membership",
+      "qualname": "_http",
+      "reason": "A2 HTTP path; refused at its seam switch until A2 approval",
+      "site_key": "engine.sp500:_http:http_urlopen:1",
+      "transport": "http-metadata"
+    },
+    {
+      "call": "urllib.request.urlopen(request, timeout=timeout)",
+      "caller_chain": [
+        "_default_fetcher"
+      ],
+      "column": 9,
+      "disposition": "a2_refused",
+      "line": 81,
+      "module": "engine.split_provider",
+      "primitive": "http_urlopen",
+      "producer_id": "http.split_provider.shared_sender",
+      "qualname": "_default_fetcher",
+      "reason": "A2 shared Yahoo/SEC/issuer sender; endpoint-specific envelopes are required before this switch lifts",
+      "site_key": "engine.split_provider:_default_fetcher:http_urlopen:1",
+      "transport": "http-mixed"
+    },
+    {
+      "call": "ib.connect(self.host, port, **kw)",
+      "caller_chain": [
+        "LiveIB",
+        "_connect_under_gate"
+      ],
+      "column": 20,
+      "disposition": "control_message",
+      "line": 2068,
+      "module": "engine.stock_ibkr",
+      "primitive": "ibkr_non_req",
+      "producer_id": "ibkr.control.connect",
+      "qualname": "LiveIB._connect_under_gate",
+      "reason": "connection setup or adapter connection wrapper only; no market-data response is consumed; downstream data sends retain their own guards",
+      "site_key": "engine.stock_ibkr:LiveIB._connect_under_gate:ibkr_non_req:1",
+      "transport": "ibkr-control"
+    },
+    {
+      "call": "ib.reqMarketDataType(3)",
+      "caller_chain": [
+        "LiveIB",
+        "_connect_under_gate"
+      ],
+      "column": 20,
+      "disposition": "control_message",
+      "line": 2069,
+      "module": "engine.stock_ibkr",
+      "primitive": "ibkr_raw_request",
+      "producer_id": "ibkr.control.market_data_type",
+      "qualname": "LiveIB._connect_under_gate",
+      "reason": "connection setup selects delayed market-data mode; no data is requested or consumed",
+      "site_key": "engine.stock_ibkr:LiveIB._connect_under_gate:ibkr_raw_request:1",
+      "transport": "ibkr-control"
+    },
+    {
+      "call": "self.ib.managedAccounts()",
+      "caller_chain": [
+        "LiveIB",
+        "account"
+      ],
+      "column": 16,
+      "disposition": "control_message",
+      "line": 2132,
+      "module": "engine.stock_ibkr",
+      "primitive": "ibkr_non_req",
+      "producer_id": "ibkr.control.account",
+      "qualname": "LiveIB.account",
+      "reason": "reads the connected adapter's managed-account identities; no market data is requested or consumed",
+      "site_key": "engine.stock_ibkr:LiveIB.account:ibkr_non_req:1",
+      "transport": "ibkr-control"
+    },
+    {
+      "call": "self.ib.reqContractDetailsAsync(contract)",
+      "caller_chain": [
+        "LiveIB",
+        "company_name",
+        "transport"
+      ],
+      "column": 35,
+      "disposition": "a2_refused",
+      "line": 2174,
+      "module": "engine.stock_ibkr",
+      "primitive": "ibkr_raw_request",
+      "producer_id": "ibkr.metadata.company_name",
+      "qualname": "LiveIB.company_name.transport",
+      "reason": "A2 contract-details metadata request; requires its own guarded and ledgered sender before A2 approval",
+      "site_key": "engine.stock_ibkr:LiveIB.company_name.transport:ibkr_raw_request:1",
+      "transport": "ibkr-metadata"
+    },
+    {
+      "call": "self.ib.reqHistoricalDataAsync( contract, endDateTime=effective.raw_end, durationStr=effective.duration, barSizeSetting=effective.bar_size, whatToShow=effective.what_to_show, useRTH=effective.use_rth, formatDate=2)",
+      "caller_chain": [
+        "LiveIB",
+        "fetch",
+        "transport"
+      ],
+      "column": 20,
+      "disposition": "guarded_choke_point",
+      "line": 2301,
+      "module": "engine.stock_ibkr",
+      "primitive": "ibkr_raw_bars",
+      "producer_id": "ibkr.choke.liveib_bars",
+      "qualname": "LiveIB.fetch.transport",
+      "reason": "the sole raw historical-bar send; A1 accepts only an A1-bound context and producer",
+      "site_key": "engine.stock_ibkr:LiveIB.fetch.transport:ibkr_raw_bars:1",
+      "transport": "ibkr-bars"
+    },
+    {
+      "call": "self.ib.reqHeadTimeStampAsync(contract, whatToShow=effective.what_to_show, useRTH=effective.use_rth, formatDate=2)",
+      "caller_chain": [
+        "LiveIB",
+        "head_timestamp"
+      ],
+      "column": 20,
+      "disposition": "guarded_choke_point",
+      "line": 2277,
+      "module": "engine.stock_ibkr",
+      "primitive": "ibkr_raw_head",
+      "producer_id": "ibkr.choke.liveib_head",
+      "qualname": "LiveIB.head_timestamp",
+      "reason": "the sole raw head-timestamp send; A1 accepts only an A1-bound context and producer",
+      "site_key": "engine.stock_ibkr:LiveIB.head_timestamp:ibkr_raw_head:1",
+      "transport": "ibkr-head"
+    },
+    {
+      "call": "self.ib.qualifyContractsAsync(c)",
+      "caller_chain": [
+        "LiveIB",
+        "qualify"
+      ],
+      "column": 46,
+      "disposition": "guarded_choke_point",
+      "line": 2149,
+      "module": "engine.stock_ibkr",
+      "primitive": "ibkr_non_req",
+      "producer_id": "ibkr.choke.qualify",
+      "qualname": "LiveIB.qualify",
+      "reason": "shared contract-qualification choke point; A1-bound context and ledger-only ibkr-metadata required on the nightly path (spec section 4); other callers remain refused until A2",
+      "site_key": "engine.stock_ibkr:LiveIB.qualify:ibkr_non_req:1",
+      "transport": "ibkr-metadata"
+    },
+    {
+      "call": "self.ib.qualifyContractsAsync(c)",
+      "caller_chain": [
+        "LiveIB",
+        "qualify_many"
+      ],
+      "column": 54,
+      "disposition": "guarded_choke_point",
+      "line": 2228,
+      "module": "engine.stock_ibkr",
+      "primitive": "ibkr_non_req",
+      "producer_id": "ibkr.choke.qualify_many",
+      "qualname": "LiveIB.qualify_many",
+      "reason": "shared contract-qualification choke point; A1-bound context and ledger-only ibkr-metadata required on the nightly path (spec section 4); other callers remain refused until A2",
+      "site_key": "engine.stock_ibkr:LiveIB.qualify_many:ibkr_non_req:1",
+      "transport": "ibkr-metadata"
+    },
+    {
+      "call": "self.ib.qualifyContractsAsync(c)",
+      "caller_chain": [
+        "LiveIB",
+        "qualify_many"
+      ],
+      "column": 58,
+      "disposition": "guarded_choke_point",
+      "line": 2240,
+      "module": "engine.stock_ibkr",
+      "primitive": "ibkr_non_req",
+      "producer_id": "ibkr.choke.qualify_many",
+      "qualname": "LiveIB.qualify_many",
+      "reason": "shared contract-qualification choke point; A1-bound context and ledger-only ibkr-metadata required on the nightly path (spec section 4); other callers remain refused until A2",
+      "site_key": "engine.stock_ibkr:LiveIB.qualify_many:ibkr_non_req:2",
+      "transport": "ibkr-metadata"
+    },
+    {
+      "call": "self.connect()",
+      "caller_chain": [
+        "LiveIB",
+        "reconnect"
+      ],
+      "column": 8,
+      "disposition": "control_message",
+      "line": 2126,
+      "module": "engine.stock_ibkr",
+      "primitive": "ibkr_non_req",
+      "producer_id": "ibkr.control.reconnect",
+      "qualname": "LiveIB.reconnect",
+      "reason": "connection setup or adapter connection wrapper only; no market-data response is consumed; downstream data sends retain their own guards",
+      "site_key": "engine.stock_ibkr:LiveIB.reconnect:ibkr_non_req:1",
+      "transport": "ibkr-control"
+    },
+    {
+      "call": "self.ib.reqMatchingSymbols(effective.symbol)",
+      "caller_chain": [
+        "LiveIB",
+        "search"
+      ],
+      "column": 34,
+      "disposition": "a2_refused",
+      "line": 2260,
+      "module": "engine.stock_ibkr",
+      "primitive": "ibkr_raw_request",
+      "producer_id": "ibkr.metadata.symbol_search",
+      "qualname": "LiveIB.search",
+      "reason": "A2 symbol-search metadata request; requires its own guarded and ledgered sender before A2 approval",
+      "site_key": "engine.stock_ibkr:LiveIB.search:ibkr_raw_request:1",
+      "transport": "ibkr-metadata"
+    },
+    {
+      "call": "adapter.fetch(contract, end, duration, \"1 min\")",
+      "caller_chain": [
+        "_doctor_body"
+      ],
+      "column": 22,
+      "disposition": "a2_refused",
+      "line": 9406,
+      "module": "engine.stock_ibkr",
+      "primitive": "adapter_fetch",
+      "producer_id": "ibkr.stock_ibkr.doctor",
+      "qualname": "_doctor_body",
+      "reason": "A2 path; refused at the guarded LiveIB choke point until A2 approval",
+      "site_key": "engine.stock_ibkr:_doctor_body:adapter_fetch:1",
+      "transport": "ibkr-bars"
+    },
+    {
+      "a1_call_path": [
+        "gap_fill_parallel",
+        "gap_fill_parallel.worker",
+        "gap_fill",
+        "_fill_series",
+        "_fill_series_inner",
+        "_backfill_earlier",
+        "_backfill_seal_interior",
+        "fill_missing_days",
+        "_fill_missing_days_body",
+        "_fetch_month_bars"
+      ],
+      "call": "sender.fetch(contract, end, duration, bar_size, what_to_show=wts)",
+      "caller_chain": [
+        "_fetch_month_bars"
+      ],
+      "column": 31,
+      "disposition": "a1_context_required",
+      "line": 3433,
+      "module": "engine.stock_ibkr",
+      "primitive": "adapter_fetch",
+      "producer_id": "ibkr.gap_fill.month_daily",
+      "qualname": "_fetch_month_bars",
+      "reason": "reachable from gap_fill_parallel only with its A1-bound context; shared legacy callers remain refused",
+      "site_key": "engine.stock_ibkr:_fetch_month_bars:adapter_fetch:1",
+      "transport": "ibkr-bars"
+    },
+    {
+      "a1_call_path": [
+        "gap_fill_parallel",
+        "gap_fill_parallel.worker",
+        "gap_fill",
+        "_fill_series",
+        "_fill_series_inner",
+        "_backfill_earlier",
+        "_backfill_seal_interior",
+        "fill_missing_days",
+        "_fill_missing_days_body",
+        "_fetch_month_bars"
+      ],
+      "call": "sender.fetch(contract, cur, duration, bar_size, what_to_show=wts)",
+      "caller_chain": [
+        "_fetch_month_bars"
+      ],
+      "column": 36,
+      "disposition": "a1_context_required",
+      "line": 3473,
+      "module": "engine.stock_ibkr",
+      "primitive": "adapter_fetch",
+      "producer_id": "ibkr.gap_fill.month_intraday",
+      "qualname": "_fetch_month_bars",
+      "reason": "reachable from gap_fill_parallel only with its A1-bound context; shared legacy callers remain refused",
+      "site_key": "engine.stock_ibkr:_fetch_month_bars:adapter_fetch:2",
+      "transport": "ibkr-bars"
+    },
+    {
+      "a1_call_path": [
+        "gap_fill_parallel",
+        "gap_fill_parallel.worker",
+        "gap_fill",
+        "_prefetch_combined",
+        "_prefetch_unfiltered",
+        "_fetch_request"
+      ],
+      "call": "adapter.fetch(contract, end_dt, duration, bar_size)",
+      "caller_chain": [
+        "_fetch_request"
+      ],
+      "column": 27,
+      "disposition": "a1_context_required",
+      "line": 4866,
+      "module": "engine.stock_ibkr",
+      "primitive": "adapter_fetch",
+      "producer_id": "ibkr.gap_fill.session_fetch",
+      "qualname": "_fetch_request",
+      "reason": "reachable from gap_fill_parallel only with its A1-bound context; shared legacy callers remain refused",
+      "site_key": "engine.stock_ibkr:_fetch_request:adapter_fetch:1",
+      "transport": "ibkr-bars"
+    },
+    {
+      "a1_call_path": [
+        "gap_fill_parallel",
+        "gap_fill_parallel.worker",
+        "gap_fill",
+        "_prefetch_combined",
+        "_prefetch_unfiltered",
+        "_fetch_request"
+      ],
+      "call": "adapter.fetch(contract, end_dt, duration, bar_size, what_to_show)",
+      "caller_chain": [
+        "_fetch_request"
+      ],
+      "column": 23,
+      "disposition": "a1_context_required",
+      "line": 4867,
+      "module": "engine.stock_ibkr",
+      "primitive": "adapter_fetch",
+      "producer_id": "ibkr.gap_fill.session_fetch",
+      "qualname": "_fetch_request",
+      "reason": "reachable from gap_fill_parallel only with its A1-bound context; shared legacy callers remain refused",
+      "site_key": "engine.stock_ibkr:_fetch_request:adapter_fetch:2",
+      "transport": "ibkr-bars"
+    },
+    {
+      "a1_call_path": [
+        "gap_fill_parallel",
+        "gap_fill_parallel.worker",
+        "gap_fill",
+        "_fill_series",
+        "_fill_series_inner",
+        "_backfill_earlier",
+        "_head_start_evidence"
+      ],
+      "call": "adapter.head_timestamp(contract)",
+      "caller_chain": [
+        "_head_start_evidence"
+      ],
+      "column": 20,
+      "disposition": "a1_context_required",
+      "line": 1180,
+      "module": "engine.stock_ibkr",
+      "primitive": "adapter_head",
+      "producer_id": "ibkr.gap_fill.head_timestamp",
+      "qualname": "_head_start_evidence",
+      "reason": "reachable from gap_fill_parallel only with its A1-bound context; shared legacy callers remain refused",
+      "site_key": "engine.stock_ibkr:_head_start_evidence:adapter_head:1",
+      "transport": "ibkr-head"
+    },
+    {
+      "a1_call_path": [
+        "gap_fill_parallel",
+        "gap_fill_parallel.worker",
+        "gap_fill",
+        "_fill_series",
+        "_fill_series_inner",
+        "_backfill_earlier",
+        "_head_start_evidence"
+      ],
+      "call": "adapter.head_timestamp(contract, what_to_show)",
+      "caller_chain": [
+        "_head_start_evidence"
+      ],
+      "column": 25,
+      "disposition": "a1_context_required",
+      "line": 1181,
+      "module": "engine.stock_ibkr",
+      "primitive": "adapter_head",
+      "producer_id": "ibkr.gap_fill.head_timestamp",
+      "qualname": "_head_start_evidence",
+      "reason": "reachable from gap_fill_parallel only with its A1-bound context; shared legacy callers remain refused",
+      "site_key": "engine.stock_ibkr:_head_start_evidence:adapter_head:2",
+      "transport": "ibkr-head"
+    },
+    {
+      "call": "adapter.head_timestamp(contract)",
+      "caller_chain": [
+        "_identity_earliest_evidence"
+      ],
+      "column": 24,
+      "disposition": "a2_refused",
+      "line": 1300,
+      "module": "engine.stock_ibkr",
+      "primitive": "adapter_head",
+      "producer_id": "ibkr.identity.head_timestamp",
+      "qualname": "_identity_earliest_evidence",
+      "reason": "A2 Add Stock identity probe; not reached by nightly gap fill; refused at the guarded head choke point",
+      "site_key": "engine.stock_ibkr:_identity_earliest_evidence:adapter_head:1",
+      "transport": "ibkr-head"
+    },
+    {
+      "call": "adapter.head_timestamp(contract, what_to_show)",
+      "caller_chain": [
+        "_identity_earliest_evidence"
+      ],
+      "column": 29,
+      "disposition": "a2_refused",
+      "line": 1301,
+      "module": "engine.stock_ibkr",
+      "primitive": "adapter_head",
+      "producer_id": "ibkr.identity.head_timestamp",
+      "qualname": "_identity_earliest_evidence",
+      "reason": "A2 Add Stock identity probe; not reached by nightly gap fill; refused at the guarded head choke point",
+      "site_key": "engine.stock_ibkr:_identity_earliest_evidence:adapter_head:2",
+      "transport": "ibkr-head"
+    },
+    {
+      "call": "socket.socket(socket.AF_INET, socket.SOCK_STREAM)",
+      "caller_chain": [
+        "_port_open"
+      ],
+      "column": 8,
+      "disposition": "control_socket",
+      "line": 9284,
+      "module": "engine.stock_ibkr",
+      "primitive": "socket",
+      "producer_id": "socket.stock_ibkr.port_open",
+      "qualname": "_port_open",
+      "reason": "control-plane port probe only; no market-data response is consumed",
+      "site_key": "engine.stock_ibkr:_port_open:socket:1",
+      "transport": "socket-control"
+    },
+    {
+      "a1_call_path": [
+        "gap_fill_parallel",
+        "gap_fill_parallel.worker",
+        "gap_fill",
+        "_fill_series",
+        "_fill_series_inner",
+        "_backfill_earlier",
+        "_head_start_evidence",
+        "_probe_earliest_daily",
+        "_probe_covered_daily_prefix"
+      ],
+      "call": "adapter.fetch(contract, last.replace(tzinfo=None), duration, \"1 day\", what_to_show=fib.KINDS[kind])",
+      "caller_chain": [
+        "_probe_covered_daily_prefix"
+      ],
+      "column": 27,
+      "disposition": "a1_context_required",
+      "line": 1114,
+      "module": "engine.stock_ibkr",
+      "primitive": "adapter_fetch",
+      "producer_id": "ibkr.gap_fill.head_daily_probe",
+      "qualname": "_probe_covered_daily_prefix",
+      "reason": "Shared daily-probe coverage-edge decomposition under the same scoped producer; each carrier is paced and ledgered",
+      "site_key": "engine.stock_ibkr:_probe_covered_daily_prefix:adapter_fetch:1",
+      "transport": "ibkr-bars"
+    },
+    {
+      "a1_call_path": [
+        "gap_fill_parallel",
+        "gap_fill_parallel.worker",
+        "gap_fill",
+        "_fill_series",
+        "_fill_series_inner",
+        "_backfill_earlier",
+        "_head_start_evidence",
+        "_probe_earliest_daily"
+      ],
+      "call": "adapter.fetch(contract, end, HEAD_PROBE_DURATION, \"1 day\")",
+      "caller_chain": [
+        "_probe_earliest_daily"
+      ],
+      "column": 27,
+      "disposition": "a1_context_required",
+      "line": 1036,
+      "module": "engine.stock_ibkr",
+      "primitive": "adapter_fetch",
+      "producer_id": "ibkr.gap_fill.head_daily_probe",
+      "qualname": "_probe_earliest_daily",
+      "reason": "reachable from gap_fill_parallel only with its A1-bound context; shared legacy callers remain refused",
+      "site_key": "engine.stock_ibkr:_probe_earliest_daily:adapter_fetch:1",
+      "transport": "ibkr-bars"
+    },
+    {
+      "a1_call_path": [
+        "gap_fill_parallel",
+        "gap_fill_parallel.worker",
+        "gap_fill",
+        "_fill_series",
+        "_fill_series_inner",
+        "_backfill_earlier",
+        "_head_start_evidence",
+        "_probe_earliest_daily"
+      ],
+      "call": "adapter.fetch(contract, end, HEAD_PROBE_DURATION, \"1 day\", what_to_show)",
+      "caller_chain": [
+        "_probe_earliest_daily"
+      ],
+      "column": 27,
+      "disposition": "a1_context_required",
+      "line": 1038,
+      "module": "engine.stock_ibkr",
+      "primitive": "adapter_fetch",
+      "producer_id": "ibkr.gap_fill.head_daily_probe",
+      "qualname": "_probe_earliest_daily",
+      "reason": "reachable from gap_fill_parallel only with its A1-bound context; shared legacy callers remain refused",
+      "site_key": "engine.stock_ibkr:_probe_earliest_daily:adapter_fetch:2",
+      "transport": "ibkr-bars"
+    },
+    {
+      "call": "adapter.fetch(contract, end.replace(tzinfo=None), dur, bar_size, what_to_show=fib.KINDS[kind])",
+      "caller_chain": [
+        "_probe_max_span_body"
+      ],
+      "column": 26,
+      "disposition": "a2_refused",
+      "line": 9932,
+      "module": "engine.stock_ibkr",
+      "primitive": "adapter_fetch",
+      "producer_id": "ibkr.stock_ibkr.span_probe",
+      "qualname": "_probe_max_span_body",
+      "reason": "A2 path; refused at the guarded LiveIB choke point until A2 approval",
+      "site_key": "engine.stock_ibkr:_probe_max_span_body:adapter_fetch:1",
+      "transport": "ibkr-bars"
+    },
+    {
+      "call": "sender.fetch(contract, end_dt, duration, bar_size, what_to_show=what_to_show)",
+      "caller_chain": [
+        "_retired_spot_check_day"
+      ],
+      "column": 27,
+      "disposition": "a2_refused",
+      "line": 5423,
+      "module": "engine.stock_ibkr",
+      "primitive": "adapter_fetch",
+      "producer_id": "ibkr.stock_ibkr.retired_spot_check",
+      "qualname": "_retired_spot_check_day",
+      "reason": "A2 path; refused at the guarded LiveIB choke point until A2 approval",
+      "site_key": "engine.stock_ibkr:_retired_spot_check_day:adapter_fetch:1",
+      "transport": "ibkr-bars"
+    },
+    {
+      "a1_call_path": [
+        "gap_fill_parallel",
+        "gap_fill_parallel.worker",
+        "gap_fill",
+        "earliest_available"
+      ],
+      "call": "adapter.head_timestamp(contract)",
+      "caller_chain": [
+        "earliest_available"
+      ],
+      "column": 24,
+      "disposition": "a1_context_required",
+      "line": 1266,
+      "module": "engine.stock_ibkr",
+      "primitive": "adapter_head",
+      "producer_id": "ibkr.earliest_available.head_timestamp",
+      "qualname": "earliest_available",
+      "reason": "reachable from gap_fill_parallel only with its A1-bound context; shared legacy callers remain refused",
+      "site_key": "engine.stock_ibkr:earliest_available:adapter_head:1",
+      "transport": "ibkr-head"
+    },
+    {
+      "a1_call_path": [
+        "gap_fill_parallel",
+        "gap_fill_parallel.worker",
+        "gap_fill",
+        "earliest_available"
+      ],
+      "call": "adapter.head_timestamp(contract, what_to_show)",
+      "caller_chain": [
+        "earliest_available"
+      ],
+      "column": 29,
+      "disposition": "a1_context_required",
+      "line": 1267,
+      "module": "engine.stock_ibkr",
+      "primitive": "adapter_head",
+      "producer_id": "ibkr.earliest_available.head_timestamp",
+      "qualname": "earliest_available",
+      "reason": "reachable from gap_fill_parallel only with its A1-bound context; shared legacy callers remain refused",
+      "site_key": "engine.stock_ibkr:earliest_available:adapter_head:2",
+      "transport": "ibkr-head"
+    },
+    {
+      "call": "LiveIB(host, ports, client_id=client_id, selected_account=selected_account).connect()",
+      "caller_chain": [
+        "live_adapter_factory",
+        "make"
+      ],
+      "column": 15,
+      "disposition": "control_message",
+      "line": 2369,
+      "module": "engine.stock_ibkr",
+      "primitive": "ibkr_non_req",
+      "producer_id": "ibkr.control.adapter_factory",
+      "qualname": "live_adapter_factory.make",
+      "reason": "connection setup or adapter connection wrapper only; no market-data response is consumed; downstream data sends retain their own guards",
+      "site_key": "engine.stock_ibkr:live_adapter_factory.make:ibkr_non_req:1",
+      "transport": "ibkr-control"
+    },
+    {
+      "call": "urllib.request.urlopen(req, timeout=20)",
+      "caller_chain": [
+        "fetch_daily_reference"
+      ],
+      "column": 14,
+      "disposition": "a2_refused",
+      "line": 182,
+      "module": "engine.stock_validate",
+      "primitive": "http_urlopen",
+      "producer_id": "http.stockanalysis.validation",
+      "qualname": "fetch_daily_reference",
+      "reason": "A2 HTTP path; refused at its seam switch until A2 approval",
+      "site_key": "engine.stock_validate:fetch_daily_reference:http_urlopen:1",
+      "transport": "http-series"
+    },
+    {
+      "call": "sk.LiveIB(ports=(port,), client_id=cid).connect()",
+      "caller_chain": [
+        "_connect",
+        "make"
+      ],
+      "column": 19,
+      "disposition": "control_message",
+      "line": 102,
+      "module": "engine.two_account_pacing_probe",
+      "primitive": "ibkr_non_req",
+      "producer_id": "ibkr.control.two_account_pacing_probe",
+      "qualname": "_connect.make",
+      "reason": "connection setup or adapter connection wrapper only; no market-data response is consumed; downstream data sends retain their own guards",
+      "site_key": "engine.two_account_pacing_probe:_connect.make:ibkr_non_req:1",
+      "transport": "ibkr-control"
+    },
+    {
+      "call": "adapter.fetch(contract, end.replace(tzinfo=None), DURATION, BAR_SIZE, what_to_show=\"TRADES\")",
+      "caller_chain": [
+        "hammer"
+      ],
+      "column": 27,
+      "disposition": "a2_refused",
+      "line": 73,
+      "module": "engine.two_account_pacing_probe",
+      "primitive": "adapter_fetch",
+      "producer_id": "ibkr.two_account_pacing_probe.hammer",
+      "qualname": "hammer",
+      "reason": "A2 path; refused at the guarded LiveIB choke point until A2 approval",
+      "site_key": "engine.two_account_pacing_probe:hammer:adapter_fetch:1",
+      "transport": "ibkr-bars"
+    },
+    {
+      "call": "socket.create_connection((host, port), timeout=timeout)",
+      "caller_chain": [
+        "scan_listening_ports"
+      ],
+      "column": 17,
+      "disposition": "control_socket",
+      "line": 287,
+      "module": "engine.tws_discovery",
+      "primitive": "socket",
+      "producer_id": "socket.tws_discovery.scan",
+      "qualname": "scan_listening_ports",
+      "reason": "control-plane port probe only; no market-data response is consumed",
+      "site_key": "engine.tws_discovery:scan_listening_ports:socket:1",
+      "transport": "socket-control"
+    },
+    {
+      "call": "s.connect((host, port))",
+      "caller_chain": [
+        "port_open"
+      ],
+      "column": 8,
+      "disposition": "control_socket",
+      "line": 287,
+      "module": "engine.tws_launch",
+      "primitive": "ibkr_non_req",
+      "producer_id": "socket.tws_launch.port_open",
+      "qualname": "port_open",
+      "reason": "control-plane port probe only; no market-data response is consumed",
+      "site_key": "engine.tws_launch:port_open:ibkr_non_req:1",
+      "transport": "socket-control"
+    },
+    {
+      "call": "socket.socket()",
+      "caller_chain": [
+        "port_open"
+      ],
+      "column": 8,
+      "disposition": "control_socket",
+      "line": 284,
+      "module": "engine.tws_launch",
+      "primitive": "socket",
+      "producer_id": "socket.tws_launch.port_open",
+      "qualname": "port_open",
+      "reason": "control-plane port probe only; no market-data response is consumed",
+      "site_key": "engine.tws_launch:port_open:socket:1",
+      "transport": "socket-control"
+    },
+    {
+      "call": "stock_ibkr.LiveIB( host=stock_ibkr.HOST_DEFAULT, ports=(port,), client_id=stock_ibkr.CLIENT_ID_DOCTOR).connect()",
+      "caller_chain": [
+        "verify_handshake"
+      ],
+      "column": 18,
+      "disposition": "control_message",
+      "line": 2083,
+      "module": "engine.tws_launch",
+      "primitive": "ibkr_non_req",
+      "producer_id": "ibkr.control.verify_handshake",
+      "qualname": "verify_handshake",
+      "reason": "connection setup or adapter connection wrapper only; no market-data response is consumed; downstream data sends retain their own guards",
+      "site_key": "engine.tws_launch:verify_handshake:ibkr_non_req:1",
+      "transport": "ibkr-control"
+    },
+    {
+      "call": "sender.fetch( contract, end_dt, duration, bar_size, snap[\"what_to_show\"])",
+      "caller_chain": [
+        "fetch_ratio_day"
+      ],
+      "column": 23,
+      "disposition": "a2_refused",
+      "line": 681,
+      "module": "engine.vol_value_bank",
+      "primitive": "adapter_fetch",
+      "producer_id": "ibkr.vol_value_bank.ratio_day",
+      "qualname": "fetch_ratio_day",
+      "reason": "A2 path; refused at the guarded LiveIB choke point until A2 approval",
+      "site_key": "engine.vol_value_bank:fetch_ratio_day:adapter_fetch:1",
+      "transport": "ibkr-bars"
+    }
+  ]
+}

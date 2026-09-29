@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "destination": "",
+  "format": "csv",
+  "interval": "1m",
+  "sessions": [
+    "rth"
+  ],
+  "range": "all",
+  "tickers": "ALL",
+  "workers": 4
+}

@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "ema_tier0": {
+      "type": "stdio",
+      "command": "python",
+      "args": ["engine/tier0_mcp.py"],
+      "cwd": ".",
+      "env": {}
+    }
+  }
+}

@@ -1,0 +1,1170 @@
+{
+  "schema_version": 1,
+  "phase": "a2-2d-in-progress",
+  "production_roots": [
+    {
+      "path": "engine/external_sweep.py",
+      "owner": "sweep_bank",
+      "purpose": "external_sweep",
+      "api": "begin_operation"
+    },
+    {
+      "path": "engine/external_sweep.py",
+      "owner": "sweep_ticker",
+      "purpose": "external_sweep",
+      "api": "begin_operation"
+    },
+    {
+      "path": "engine/fix_data_pipeline.py",
+      "owner": "run",
+      "purpose": "repair",
+      "api": "begin_operation"
+    },
+    {
+      "path": "engine/live_combined_flags.py",
+      "owner": "run_combined_flags",
+      "purpose": "diagnostic",
+      "api": "begin_operation"
+    },
+    {
+      "path": "engine/live_feature_check.py",
+      "owner": "run_feature_check",
+      "purpose": "diagnostic",
+      "api": "begin_operation"
+    },
+    {
+      "path": "engine/live_internal_daily_check.py",
+      "owner": "run_internal_daily_check",
+      "purpose": "diagnostic",
+      "api": "begin_operation"
+    },
+    {
+      "path": "engine/live_internal_revalidate.py",
+      "owner": "run_internal_revalidate",
+      "purpose": "diagnostic",
+      "api": "begin_operation"
+    },
+    {
+      "path": "engine/live_kind_smoke.py",
+      "owner": "run_kind_smoke",
+      "purpose": "diagnostic",
+      "api": "begin_operation"
+    },
+    {
+      "path": "engine/live_pipeline_check.py",
+      "owner": "run_pipeline_check",
+      "purpose": "diagnostic",
+      "api": "begin_operation"
+    },
+    {
+      "path": "engine/live_run_all.py",
+      "owner": "run_all",
+      "purpose": "diagnostic",
+      "api": "begin_operation"
+    },
+    {
+      "path": "engine/live_spot_probe.py",
+      "owner": "run_live_probe",
+      "purpose": "diagnostic",
+      "api": "begin_operation"
+    },
+    {
+      "path": "engine/live_validate_catchup.py",
+      "owner": "run_catchup",
+      "purpose": "diagnostic",
+      "api": "begin_operation"
+    },
+    {
+      "path": "engine/stock_ibkr.py",
+      "owner": "add_stocks_gap_fill",
+      "purpose": "add_stocks",
+      "api": "begin_operation"
+    },
+    {
+      "path": "engine/stock_ibkr.py",
+      "owner": "add_stocks_gap_fill_parallel_resilient",
+      "purpose": "add_stocks",
+      "api": "begin_operation"
+    },
+    {
+      "path": "engine/stock_ibkr.py",
+      "owner": "company_lookup",
+      "purpose": "identity",
+      "api": "begin_operation"
+    },
+    {
+      "path": "engine/stock_ibkr.py",
+      "owner": "doctor",
+      "purpose": "diagnostic",
+      "api": "begin_operation"
+    },
+    {
+      "path": "engine/stock_ibkr.py",
+      "owner": "estimate_backfill",
+      "purpose": "diagnostic",
+      "api": "begin_operation"
+    },
+    {
+      "path": "engine/stock_ibkr.py",
+      "owner": "fill_missing_days",
+      "purpose": "repair",
+      "api": "begin_operation"
+    },
+    {
+      "path": "engine/stock_ibkr.py",
+      "owner": "find_symbol",
+      "purpose": "identity",
+      "api": "begin_operation"
+    },
+    {
+      "path": "engine/stock_ibkr.py",
+      "owner": "nightly_gap_fill",
+      "purpose": "nightly",
+      "api": "begin_operation"
+    },
+    {
+      "path": "engine/stock_ibkr.py",
+      "owner": "nightly_gap_fill_parallel",
+      "purpose": "nightly",
+      "api": "begin_operation"
+    },
+    {
+      "path": "engine/stock_ibkr.py",
+      "owner": "nightly_gap_fill_parallel_resilient",
+      "purpose": "nightly",
+      "api": "begin_operation"
+    },
+    {
+      "path": "engine/stock_ibkr.py",
+      "owner": "nightly_update",
+      "purpose": "nightly",
+      "api": "begin_operation"
+    },
+    {
+      "path": "engine/stock_ibkr.py",
+      "owner": "probe_max_span",
+      "purpose": "diagnostic",
+      "api": "begin_operation"
+    },
+    {
+      "path": "engine/stock_ibkr.py",
+      "owner": "validate_symbols",
+      "purpose": "identity",
+      "api": "begin_operation"
+    },
+    {
+      "path": "engine/stock_validate.py",
+      "owner": "cross_validate_ticker",
+      "purpose": "validation",
+      "api": "begin_operation"
+    },
+    {
+      "path": "engine/stock_validate.py",
+      "owner": "fetch_daily_reference_single_request",
+      "purpose": "validation",
+      "api": "begin_operation"
+    },
+    {
+      "path": "engine/stock_validate.py",
+      "owner": "revalidate_library",
+      "purpose": "validation",
+      "api": "begin_operation"
+    },
+    {
+      "path": "engine/stock_validate.py",
+      "owner": "validate_series",
+      "purpose": "validation",
+      "api": "begin_operation"
+    },
+    {
+      "path": "engine/two_account_pacing_probe.py",
+      "owner": "run_pacing_probe",
+      "purpose": "diagnostic",
+      "api": "begin_operation"
+    }
+  ],
+  "production_dispatches": [
+    {
+      "path": "display_data.py",
+      "owner": "DataViewerApp._addstock_consume_portfree_debt._work",
+      "api": "cross_validate_ticker",
+      "purpose": "validation",
+      "standalone_purpose": "validation",
+      "mode": "root"
+    },
+    {
+      "path": "display_data.py",
+      "owner": "DataViewerApp._finalize_drain_and_seal",
+      "api": "fill_missing_days",
+      "purpose": "repair",
+      "standalone_purpose": "repair",
+      "mode": "root"
+    },
+    {
+      "path": "display_data.py",
+      "owner": "DataViewerApp._find_search_loop",
+      "api": "find_symbol",
+      "purpose": "identity",
+      "standalone_purpose": "identity",
+      "mode": "root"
+    },
+    {
+      "path": "display_data.py",
+      "owner": "DataViewerApp._fixdata_start._engine_run",
+      "api": "run",
+      "purpose": "repair",
+      "standalone_purpose": "repair",
+      "mode": "root"
+    },
+    {
+      "path": "display_data.py",
+      "owner": "DataViewerApp._storage_find_build._work",
+      "api": "preflight",
+      "purpose": "diagnostic",
+      "standalone_purpose": "diagnostic",
+      "mode": "transitive"
+    },
+    {
+      "path": "display_data.py",
+      "owner": "DataViewerApp._storage_find_build._work",
+      "api": "validate_symbols",
+      "purpose": "identity",
+      "standalone_purpose": "identity",
+      "mode": "root"
+    },
+    {
+      "path": "display_data.py",
+      "owner": "DataViewerApp._storage_find_fetch._work",
+      "api": "estimate_backfill",
+      "purpose": "diagnostic",
+      "standalone_purpose": "diagnostic",
+      "mode": "root"
+    },
+    {
+      "path": "display_data.py",
+      "owner": "DataViewerApp._storage_find_start_fill._probe_check",
+      "api": "cross_validate_ticker",
+      "purpose": "validation",
+      "standalone_purpose": "validation",
+      "mode": "root"
+    },
+    {
+      "path": "display_data.py",
+      "owner": "DataViewerApp._storage_find_start_fill._work",
+      "api": "add_stocks_gap_fill",
+      "purpose": "add_stocks",
+      "standalone_purpose": "add_stocks",
+      "mode": "root"
+    },
+    {
+      "path": "display_data.py",
+      "owner": "DataViewerApp._storage_find_start_fill._work",
+      "api": "add_stocks_gap_fill_parallel_resilient",
+      "purpose": "add_stocks",
+      "standalone_purpose": "add_stocks",
+      "mode": "root"
+    },
+    {
+      "path": "display_data.py",
+      "owner": "DataViewerApp._storage_heal_gaps._work",
+      "api": "fill_missing_days",
+      "purpose": "repair",
+      "standalone_purpose": "repair",
+      "mode": "root"
+    },
+    {
+      "path": "display_data.py",
+      "owner": "DataViewerApp._storage_ibkr_start._work",
+      "api": "nightly_update",
+      "purpose": "nightly",
+      "standalone_purpose": "nightly",
+      "mode": "root"
+    },
+    {
+      "path": "display_data.py",
+      "owner": "DataViewerApp._storage_ibkr_start._work",
+      "api": "nightly_update",
+      "purpose": "nightly",
+      "standalone_purpose": "nightly",
+      "mode": "root"
+    },
+    {
+      "path": "display_data.py",
+      "owner": "DataViewerApp._storage_verify_dialog.run.work",
+      "api": "validate_series",
+      "purpose": "validation",
+      "standalone_purpose": "validation",
+      "mode": "root"
+    },
+    {
+      "path": "display_data.py",
+      "owner": "DataViewerApp._storage_xval_revalidate._work_body",
+      "api": "cross_validate_ticker",
+      "purpose": "validation",
+      "standalone_purpose": "validation",
+      "mode": "root"
+    },
+    {
+      "path": "display_data.py",
+      "owner": "DataViewerApp._xval_worker",
+      "api": "cross_validate_ticker",
+      "purpose": "validation",
+      "standalone_purpose": "validation",
+      "mode": "root"
+    },
+    {
+      "path": "engine/external_sweep_cli.py",
+      "owner": "main",
+      "api": "sweep_bank",
+      "purpose": "external_sweep",
+      "standalone_purpose": "external_sweep",
+      "mode": "root"
+    },
+    {
+      "path": "engine/fix_data_pipeline.py",
+      "owner": "_fixed_fill",
+      "api": "fill_missing_days",
+      "purpose": "inherited",
+      "standalone_purpose": "repair",
+      "mode": "child"
+    },
+    {
+      "path": "engine/live_catchup.py",
+      "owner": "main",
+      "api": "cross_validate_ticker",
+      "purpose": "validation",
+      "standalone_purpose": "validation",
+      "mode": "root"
+    },
+    {
+      "path": "engine/live_combined_flags.py",
+      "owner": "main",
+      "api": "run_combined_flags",
+      "purpose": "diagnostic",
+      "standalone_purpose": "diagnostic",
+      "mode": "root"
+    },
+    {
+      "path": "engine/live_feature_check.py",
+      "owner": "_feature_body",
+      "api": "validate_symbols",
+      "purpose": "inherited",
+      "standalone_purpose": "identity",
+      "mode": "child"
+    },
+    {
+      "path": "engine/live_feature_check.py",
+      "owner": "main",
+      "api": "run_feature_check",
+      "purpose": "diagnostic",
+      "standalone_purpose": "diagnostic",
+      "mode": "root"
+    },
+    {
+      "path": "engine/live_internal_daily_check.py",
+      "owner": "_daily_body",
+      "api": "validate_symbols",
+      "purpose": "inherited",
+      "standalone_purpose": "identity",
+      "mode": "child"
+    },
+    {
+      "path": "engine/live_internal_daily_check.py",
+      "owner": "main",
+      "api": "run_internal_daily_check",
+      "purpose": "diagnostic",
+      "standalone_purpose": "diagnostic",
+      "mode": "root"
+    },
+    {
+      "path": "engine/live_internal_revalidate.py",
+      "owner": "main",
+      "api": "run_internal_revalidate",
+      "purpose": "diagnostic",
+      "standalone_purpose": "diagnostic",
+      "mode": "root"
+    },
+    {
+      "path": "engine/live_kind_smoke.py",
+      "owner": "main",
+      "api": "run_kind_smoke",
+      "purpose": "diagnostic",
+      "standalone_purpose": "diagnostic",
+      "mode": "root"
+    },
+    {
+      "path": "engine/live_kind_smoke.py",
+      "owner": "test_end_to_end_store",
+      "api": "validate_symbols",
+      "purpose": "inherited",
+      "standalone_purpose": "identity",
+      "mode": "child"
+    },
+    {
+      "path": "engine/live_pipeline_check.py",
+      "owner": "_pipeline_body",
+      "api": "validate_symbols",
+      "purpose": "inherited",
+      "standalone_purpose": "identity",
+      "mode": "child"
+    },
+    {
+      "path": "engine/live_pipeline_check.py",
+      "owner": "main",
+      "api": "run_pipeline_check",
+      "purpose": "diagnostic",
+      "standalone_purpose": "diagnostic",
+      "mode": "root"
+    },
+    {
+      "path": "engine/live_run_all.py",
+      "owner": "main",
+      "api": "run_all",
+      "purpose": "diagnostic",
+      "standalone_purpose": "diagnostic",
+      "mode": "root"
+    },
+    {
+      "path": "engine/live_spot_probe_cli.py",
+      "owner": "main",
+      "api": "run_live_probe",
+      "purpose": "diagnostic",
+      "standalone_purpose": "diagnostic",
+      "mode": "root"
+    },
+    {
+      "path": "engine/live_validate_catchup.py",
+      "owner": "main",
+      "api": "run_catchup",
+      "purpose": "diagnostic",
+      "standalone_purpose": "diagnostic",
+      "mode": "root"
+    },
+    {
+      "path": "engine/stock_ibkr.py",
+      "owner": "_backfill_seal_interior",
+      "api": "fill_missing_days",
+      "purpose": "inherited",
+      "standalone_purpose": "repair",
+      "mode": "child"
+    },
+    {
+      "path": "engine/stock_ibkr.py",
+      "owner": "_nightly_update_body",
+      "api": "validate_symbols",
+      "purpose": "inherited",
+      "standalone_purpose": "identity",
+      "mode": "child"
+    },
+    {
+      "path": "engine/stock_ibkr.py",
+      "owner": "preflight",
+      "api": "doctor",
+      "purpose": "diagnostic",
+      "standalone_purpose": "diagnostic",
+      "mode": "root"
+    },
+    {
+      "path": "engine/two_account_pacing_probe.py",
+      "owner": "main",
+      "api": "run_pacing_probe",
+      "purpose": "diagnostic",
+      "standalone_purpose": "diagnostic",
+      "mode": "root"
+    }
+  ],
+  "forwarded_references": [],
+  "call_path_metadata": [
+    {
+      "path": "engine/fetch_send_inventory.py",
+      "producer": "ibkr.gap_fill.month_daily",
+      "api": "fill_missing_days"
+    },
+    {
+      "path": "engine/fetch_send_inventory.py",
+      "producer": "ibkr.gap_fill.month_intraday",
+      "api": "fill_missing_days"
+    }
+  ],
+  "test_mint_sites": [
+    {
+      "path": "engine/fetch_a2_ibkr_workflows_selftest.py",
+      "owner": "Operations.open",
+      "api": "begin_operation"
+    }
+  ],
+  "context_custody": {
+    "offline_owners": [
+      "engine/fetch_a2_http_workflows_selftest.py",
+      "engine/fetch_a2_ibkr_workflows_selftest.py",
+      "engine/fetch_a2_infrastructure_selftest.py",
+      "engine/fetch_horizon_selftest.py",
+      "engine/fetch_ibkr_integration_selftest.py",
+      "engine/update_data_fence_reference.py"
+    ],
+    "constructors": [
+      {
+        "path": "engine/fetch_a2_http_workflows_selftest.py",
+        "owner": "HttpLabels.context",
+        "kind": "create"
+      },
+      {
+        "path": "engine/fetch_a2_ibkr_workflows_selftest.py",
+        "owner": "Operations.test_new_and_a1_ledgers_use_same_schema_and_parser",
+        "kind": "create"
+      },
+      {
+        "path": "engine/fetch_a2_ibkr_workflows_selftest.py",
+        "owner": "Operations.unbound_worker_narrowing_pin",
+        "kind": "create"
+      },
+      {
+        "path": "engine/fetch_a2_infrastructure_selftest.py",
+        "owner": "Infrastructure.context",
+        "kind": "create"
+      },
+      {
+        "path": "engine/fetch_a2_infrastructure_selftest.py",
+        "owner": "Infrastructure.test_default_context_registry_recreation_inverse.contexts_share_registry",
+        "kind": "create"
+      },
+      {
+        "path": "engine/fetch_horizon_selftest.py",
+        "owner": "",
+        "kind": "create"
+      },
+      {
+        "path": "engine/fetch_horizon_selftest.py",
+        "owner": "context",
+        "kind": "create"
+      },
+      {
+        "path": "engine/fetch_ibkr_integration_selftest.py",
+        "owner": "Integration.context",
+        "kind": "create"
+      },
+      {
+        "path": "engine/fetch_ibkr_integration_selftest.py",
+        "owner": "Integration.test_clock_once_and_no_midrun_settlement_advance",
+        "kind": "create"
+      },
+      {
+        "path": "engine/fetch_operations.py",
+        "owner": "begin_operation",
+        "kind": "create"
+      },
+      {
+        "path": "engine/update_data_fence_reference.py",
+        "owner": "fixture",
+        "kind": "create"
+      }
+    ],
+    "references": [
+      {
+        "path": "engine/fetch_a2_http_workflows_selftest.py",
+        "owner": "",
+        "kind": "import"
+      },
+      {
+        "path": "engine/fetch_a2_http_workflows_selftest.py",
+        "owner": "HttpLabels.a45_direct_terminal_witness",
+        "kind": "read"
+      },
+      {
+        "path": "engine/fetch_a2_http_workflows_selftest.py",
+        "owner": "HttpLabels.a45_direct_terminal_witness",
+        "kind": "read"
+      },
+      {
+        "path": "engine/fetch_a2_http_workflows_selftest.py",
+        "owner": "HttpLabels.context",
+        "kind": "create"
+      },
+      {
+        "path": "engine/fetch_a2_http_workflows_selftest.py",
+        "owner": "HttpLabels.test_a45_retry_rechecks_admission_and_offline_gate",
+        "kind": "read"
+      },
+      {
+        "path": "engine/fetch_a2_http_workflows_selftest.py",
+        "owner": "HttpLabels.test_failed_sweep_seal_preserves_existing_cache_bytes",
+        "kind": "read"
+      },
+      {
+        "path": "engine/fetch_a2_http_workflows_selftest.py",
+        "owner": "HttpLabels.test_failed_validation_seal_preserves_reference_cache_and_sidecar",
+        "kind": "read"
+      },
+      {
+        "path": "engine/fetch_a2_http_workflows_selftest.py",
+        "owner": "HttpLabels.test_force_fresh_batch_preserves_old_cache_until_seal",
+        "kind": "read"
+      },
+      {
+        "path": "engine/fetch_a2_http_workflows_selftest.py",
+        "owner": "HttpLabels.test_sweep_disk_cache_replay_requires_sealed_portable_provenance",
+        "kind": "read"
+      },
+      {
+        "path": "engine/fetch_a2_http_workflows_selftest.py",
+        "owner": "HttpLabels.test_sweep_disk_cache_replay_requires_sealed_portable_provenance",
+        "kind": "read"
+      },
+      {
+        "path": "engine/fetch_a2_ibkr_workflows_selftest.py",
+        "owner": "",
+        "kind": "import"
+      },
+      {
+        "path": "engine/fetch_a2_ibkr_workflows_selftest.py",
+        "owner": "Operations.a23_embedded_fixture",
+        "kind": "read"
+      },
+      {
+        "path": "engine/fetch_a2_ibkr_workflows_selftest.py",
+        "owner": "Operations.a23_embedded_fixture",
+        "kind": "read"
+      },
+      {
+        "path": "engine/fetch_a2_ibkr_workflows_selftest.py",
+        "owner": "Operations.a39_refusal_witness",
+        "kind": "read"
+      },
+      {
+        "path": "engine/fetch_a2_ibkr_workflows_selftest.py",
+        "owner": "Operations.a39_refusal_witness",
+        "kind": "read"
+      },
+      {
+        "path": "engine/fetch_a2_ibkr_workflows_selftest.py",
+        "owner": "Operations.a42_month_refetch_route",
+        "kind": "read"
+      },
+      {
+        "path": "engine/fetch_a2_ibkr_workflows_selftest.py",
+        "owner": "Operations.a42_month_refetch_route",
+        "kind": "read"
+      },
+      {
+        "path": "engine/fetch_a2_ibkr_workflows_selftest.py",
+        "owner": "Operations.fixdata_multiport_recovery_identity",
+        "kind": "read"
+      },
+      {
+        "path": "engine/fetch_a2_ibkr_workflows_selftest.py",
+        "owner": "Operations.fixdata_multiport_recovery_identity",
+        "kind": "read"
+      },
+      {
+        "path": "engine/fetch_a2_ibkr_workflows_selftest.py",
+        "owner": "Operations.root_fixture",
+        "kind": "read"
+      },
+      {
+        "path": "engine/fetch_a2_ibkr_workflows_selftest.py",
+        "owner": "Operations.root_fixture",
+        "kind": "read"
+      },
+      {
+        "path": "engine/fetch_a2_ibkr_workflows_selftest.py",
+        "owner": "Operations.test_a31_precontext_hold_source_inverse",
+        "kind": "read"
+      },
+      {
+        "path": "engine/fetch_a2_ibkr_workflows_selftest.py",
+        "owner": "Operations.test_actual_root_records_returned_but_unpublished_result",
+        "kind": "read"
+      },
+      {
+        "path": "engine/fetch_a2_ibkr_workflows_selftest.py",
+        "owner": "Operations.test_actual_root_records_returned_but_unpublished_result",
+        "kind": "read"
+      },
+      {
+        "path": "engine/fetch_a2_ibkr_workflows_selftest.py",
+        "owner": "Operations.test_auxiliary_actual_roots_durability_fault_matrix",
+        "kind": "read"
+      },
+      {
+        "path": "engine/fetch_a2_ibkr_workflows_selftest.py",
+        "owner": "Operations.test_auxiliary_actual_roots_durability_fault_matrix",
+        "kind": "read"
+      },
+      {
+        "path": "engine/fetch_a2_ibkr_workflows_selftest.py",
+        "owner": "Operations.test_auxiliary_actual_roots_seal_and_report_faults",
+        "kind": "read"
+      },
+      {
+        "path": "engine/fetch_a2_ibkr_workflows_selftest.py",
+        "owner": "Operations.test_auxiliary_actual_roots_seal_and_report_faults",
+        "kind": "read"
+      },
+      {
+        "path": "engine/fetch_a2_ibkr_workflows_selftest.py",
+        "owner": "Operations.test_c2_addstock_completion_evidence_faults_actual_roots",
+        "kind": "read"
+      },
+      {
+        "path": "engine/fetch_a2_ibkr_workflows_selftest.py",
+        "owner": "Operations.test_c2_addstock_completion_evidence_faults_actual_roots",
+        "kind": "read"
+      },
+      {
+        "path": "engine/fetch_a2_ibkr_workflows_selftest.py",
+        "owner": "Operations.test_c2_addstock_seal_primary_and_removal_inverse",
+        "kind": "read"
+      },
+      {
+        "path": "engine/fetch_a2_ibkr_workflows_selftest.py",
+        "owner": "Operations.test_c2_addstock_seal_primary_and_removal_inverse",
+        "kind": "read"
+      },
+      {
+        "path": "engine/fetch_a2_ibkr_workflows_selftest.py",
+        "owner": "Operations.test_c2_fixdata_completion_evidence_faults_actual_root",
+        "kind": "read"
+      },
+      {
+        "path": "engine/fetch_a2_ibkr_workflows_selftest.py",
+        "owner": "Operations.test_c2_fixdata_completion_evidence_faults_actual_root",
+        "kind": "read"
+      },
+      {
+        "path": "engine/fetch_a2_ibkr_workflows_selftest.py",
+        "owner": "Operations.test_c2_fixdata_later_month_fault_retains_committed_month",
+        "kind": "read"
+      },
+      {
+        "path": "engine/fetch_a2_ibkr_workflows_selftest.py",
+        "owner": "Operations.test_c2_fixdata_later_month_fault_retains_committed_month",
+        "kind": "read"
+      },
+      {
+        "path": "engine/fetch_a2_ibkr_workflows_selftest.py",
+        "owner": "Operations.test_c2_fixdata_ledger_fault_is_terminal_and_reported_once",
+        "kind": "read"
+      },
+      {
+        "path": "engine/fetch_a2_ibkr_workflows_selftest.py",
+        "owner": "Operations.test_c2_fixdata_ledger_fault_is_terminal_and_reported_once",
+        "kind": "read"
+      },
+      {
+        "path": "engine/fetch_a2_ibkr_workflows_selftest.py",
+        "owner": "Operations.test_context_catalog_reads_other_source_folders_without_git",
+        "kind": "literal"
+      },
+      {
+        "path": "engine/fetch_a2_ibkr_workflows_selftest.py",
+        "owner": "Operations.test_context_inventory_core_and_read_only_exceptions_are_not_mint_exemptions",
+        "kind": "literal"
+      },
+      {
+        "path": "engine/fetch_a2_ibkr_workflows_selftest.py",
+        "owner": "Operations.test_context_inventory_core_and_read_only_exceptions_are_not_mint_exemptions",
+        "kind": "literal"
+      },
+      {
+        "path": "engine/fetch_a2_ibkr_workflows_selftest.py",
+        "owner": "Operations.test_context_inventory_core_and_read_only_exceptions_are_not_mint_exemptions",
+        "kind": "literal"
+      },
+      {
+        "path": "engine/fetch_a2_ibkr_workflows_selftest.py",
+        "owner": "Operations.test_context_inventory_core_and_read_only_exceptions_are_not_mint_exemptions",
+        "kind": "literal"
+      },
+      {
+        "path": "engine/fetch_a2_ibkr_workflows_selftest.py",
+        "owner": "Operations.test_context_inventory_core_and_read_only_exceptions_are_not_mint_exemptions",
+        "kind": "literal"
+      },
+      {
+        "path": "engine/fetch_a2_ibkr_workflows_selftest.py",
+        "owner": "Operations.test_context_inventory_core_and_read_only_exceptions_are_not_mint_exemptions",
+        "kind": "literal"
+      },
+      {
+        "path": "engine/fetch_a2_ibkr_workflows_selftest.py",
+        "owner": "Operations.test_context_inventory_core_and_read_only_exceptions_are_not_mint_exemptions",
+        "kind": "literal"
+      },
+      {
+        "path": "engine/fetch_a2_ibkr_workflows_selftest.py",
+        "owner": "Operations.test_context_inventory_rejects_construction_aliases_and_foreign_test_names",
+        "kind": "literal"
+      },
+      {
+        "path": "engine/fetch_a2_ibkr_workflows_selftest.py",
+        "owner": "Operations.test_context_inventory_rejects_construction_aliases_and_foreign_test_names",
+        "kind": "literal"
+      },
+      {
+        "path": "engine/fetch_a2_ibkr_workflows_selftest.py",
+        "owner": "Operations.test_context_inventory_rejects_construction_aliases_and_foreign_test_names",
+        "kind": "literal"
+      },
+      {
+        "path": "engine/fetch_a2_ibkr_workflows_selftest.py",
+        "owner": "Operations.test_context_inventory_rejects_construction_aliases_and_foreign_test_names",
+        "kind": "literal"
+      },
+      {
+        "path": "engine/fetch_a2_ibkr_workflows_selftest.py",
+        "owner": "Operations.test_context_inventory_rejects_construction_aliases_and_foreign_test_names",
+        "kind": "literal"
+      },
+      {
+        "path": "engine/fetch_a2_ibkr_workflows_selftest.py",
+        "owner": "Operations.test_context_inventory_rejects_construction_aliases_and_foreign_test_names",
+        "kind": "literal"
+      },
+      {
+        "path": "engine/fetch_a2_ibkr_workflows_selftest.py",
+        "owner": "Operations.test_context_inventory_rejects_construction_aliases_and_foreign_test_names",
+        "kind": "literal"
+      },
+      {
+        "path": "engine/fetch_a2_ibkr_workflows_selftest.py",
+        "owner": "Operations.test_context_inventory_rejects_construction_aliases_and_foreign_test_names",
+        "kind": "literal"
+      },
+      {
+        "path": "engine/fetch_a2_ibkr_workflows_selftest.py",
+        "owner": "Operations.test_d07_fixed_audit_result_fault_has_no_current_credit",
+        "kind": "read"
+      },
+      {
+        "path": "engine/fetch_a2_ibkr_workflows_selftest.py",
+        "owner": "Operations.test_d07_fixed_audit_result_fault_has_no_current_credit",
+        "kind": "read"
+      },
+      {
+        "path": "engine/fetch_a2_ibkr_workflows_selftest.py",
+        "owner": "Operations.test_d14_http_roots_default_hold_before_effects",
+        "kind": "read"
+      },
+      {
+        "path": "engine/fetch_a2_ibkr_workflows_selftest.py",
+        "owner": "Operations.test_d2_internal_request_durability_matrix",
+        "kind": "read"
+      },
+      {
+        "path": "engine/fetch_a2_ibkr_workflows_selftest.py",
+        "owner": "Operations.test_d2_internal_request_durability_matrix",
+        "kind": "read"
+      },
+      {
+        "path": "engine/fetch_a2_ibkr_workflows_selftest.py",
+        "owner": "Operations.test_d2_internal_seal_report_faults",
+        "kind": "read"
+      },
+      {
+        "path": "engine/fetch_a2_ibkr_workflows_selftest.py",
+        "owner": "Operations.test_d2_internal_seal_report_faults",
+        "kind": "read"
+      },
+      {
+        "path": "engine/fetch_a2_ibkr_workflows_selftest.py",
+        "owner": "Operations.test_inventory_compaction_preserves_mint_custody_and_operation_preorder",
+        "kind": "literal"
+      },
+      {
+        "path": "engine/fetch_a2_ibkr_workflows_selftest.py",
+        "owner": "Operations.test_inventory_compaction_preserves_mint_custody_and_operation_preorder",
+        "kind": "literal"
+      },
+      {
+        "path": "engine/fetch_a2_ibkr_workflows_selftest.py",
+        "owner": "Operations.test_inventory_index_is_fresh_and_preserves_refusal_order",
+        "kind": "literal"
+      },
+      {
+        "path": "engine/fetch_a2_ibkr_workflows_selftest.py",
+        "owner": "Operations.test_inventory_index_is_fresh_and_preserves_refusal_order",
+        "kind": "literal"
+      },
+      {
+        "path": "engine/fetch_a2_ibkr_workflows_selftest.py",
+        "owner": "Operations.test_inventory_sparse_context_preserves_nested_owner_and_first_refusal",
+        "kind": "literal"
+      },
+      {
+        "path": "engine/fetch_a2_ibkr_workflows_selftest.py",
+        "owner": "Operations.test_inventory_sparse_context_preserves_nested_owner_and_first_refusal",
+        "kind": "literal"
+      },
+      {
+        "path": "engine/fetch_a2_ibkr_workflows_selftest.py",
+        "owner": "Operations.test_inventory_sparse_context_preserves_nested_owner_and_first_refusal",
+        "kind": "literal"
+      },
+      {
+        "path": "engine/fetch_a2_ibkr_workflows_selftest.py",
+        "owner": "Operations.test_new_and_a1_ledgers_use_same_schema_and_parser",
+        "kind": "create"
+      },
+      {
+        "path": "engine/fetch_a2_ibkr_workflows_selftest.py",
+        "owner": "Operations.test_probe_companion_publication_order_and_faults",
+        "kind": "read"
+      },
+      {
+        "path": "engine/fetch_a2_ibkr_workflows_selftest.py",
+        "owner": "Operations.test_probe_companion_publication_order_and_faults",
+        "kind": "read"
+      },
+      {
+        "path": "engine/fetch_a2_ibkr_workflows_selftest.py",
+        "owner": "Operations.test_probe_failed_file_close_retires_handle",
+        "kind": "read"
+      },
+      {
+        "path": "engine/fetch_a2_ibkr_workflows_selftest.py",
+        "owner": "Operations.test_probe_failed_file_close_retires_handle",
+        "kind": "read"
+      },
+      {
+        "path": "engine/fetch_a2_ibkr_workflows_selftest.py",
+        "owner": "Operations.test_standalone_probe_durability_matrix_never_publishes",
+        "kind": "read"
+      },
+      {
+        "path": "engine/fetch_a2_ibkr_workflows_selftest.py",
+        "owner": "Operations.test_standalone_probe_durability_matrix_never_publishes",
+        "kind": "read"
+      },
+      {
+        "path": "engine/fetch_a2_ibkr_workflows_selftest.py",
+        "owner": "Operations.test_targeted_completion_survives_seal_and_report_faults",
+        "kind": "read"
+      },
+      {
+        "path": "engine/fetch_a2_ibkr_workflows_selftest.py",
+        "owner": "Operations.test_targeted_completion_survives_seal_and_report_faults",
+        "kind": "read"
+      },
+      {
+        "path": "engine/fetch_a2_ibkr_workflows_selftest.py",
+        "owner": "Operations.test_targeted_fill_durability_faults_stop_before_bank_publication",
+        "kind": "read"
+      },
+      {
+        "path": "engine/fetch_a2_ibkr_workflows_selftest.py",
+        "owner": "Operations.test_targeted_fill_durability_faults_stop_before_bank_publication",
+        "kind": "read"
+      },
+      {
+        "path": "engine/fetch_a2_ibkr_workflows_selftest.py",
+        "owner": "Operations.test_targeted_later_ledger_fault_reports_retained_month_and_debt",
+        "kind": "read"
+      },
+      {
+        "path": "engine/fetch_a2_ibkr_workflows_selftest.py",
+        "owner": "Operations.test_targeted_later_ledger_fault_reports_retained_month_and_debt",
+        "kind": "read"
+      },
+      {
+        "path": "engine/fetch_a2_ibkr_workflows_selftest.py",
+        "owner": "Operations.unbound_worker_narrowing_pin",
+        "kind": "create"
+      },
+      {
+        "path": "engine/fetch_a2_infrastructure_selftest.py",
+        "owner": "",
+        "kind": "import"
+      },
+      {
+        "path": "engine/fetch_a2_infrastructure_selftest.py",
+        "owner": "Infrastructure.context",
+        "kind": "create"
+      },
+      {
+        "path": "engine/fetch_a2_infrastructure_selftest.py",
+        "owner": "Infrastructure.test_default_context_registry_recreation_inverse.contexts_share_registry",
+        "kind": "create"
+      },
+      {
+        "path": "engine/fetch_horizon_selftest.py",
+        "owner": "",
+        "kind": "create"
+      },
+      {
+        "path": "engine/fetch_horizon_selftest.py",
+        "owner": "",
+        "kind": "import"
+      },
+      {
+        "path": "engine/fetch_horizon_selftest.py",
+        "owner": "",
+        "kind": "literal"
+      },
+      {
+        "path": "engine/fetch_horizon_selftest.py",
+        "owner": "context",
+        "kind": "create"
+      },
+      {
+        "path": "engine/fetch_ibkr_integration_selftest.py",
+        "owner": "",
+        "kind": "import"
+      },
+      {
+        "path": "engine/fetch_ibkr_integration_selftest.py",
+        "owner": "Integration._early_close_store_pin",
+        "kind": "read"
+      },
+      {
+        "path": "engine/fetch_ibkr_integration_selftest.py",
+        "owner": "Integration._holiday_store_pin",
+        "kind": "read"
+      },
+      {
+        "path": "engine/fetch_ibkr_integration_selftest.py",
+        "owner": "Integration._planner_store_pin",
+        "kind": "read"
+      },
+      {
+        "path": "engine/fetch_ibkr_integration_selftest.py",
+        "owner": "Integration.context",
+        "kind": "create"
+      },
+      {
+        "path": "engine/fetch_ibkr_integration_selftest.py",
+        "owner": "Integration.operation_fixture",
+        "kind": "read"
+      },
+      {
+        "path": "engine/fetch_ibkr_integration_selftest.py",
+        "owner": "Integration.test_162_empty_subwindow_does_not_abort_nonempty_day_commit",
+        "kind": "read"
+      },
+      {
+        "path": "engine/fetch_ibkr_integration_selftest.py",
+        "owner": "Integration.test_actual_daily_store_under_false_early_table_excludes_current_day",
+        "kind": "read"
+      },
+      {
+        "path": "engine/fetch_ibkr_integration_selftest.py",
+        "owner": "Integration.test_actual_holiday_refusal_persists_halt_if_plan_filter_is_bypassed",
+        "kind": "read"
+      },
+      {
+        "path": "engine/fetch_ibkr_integration_selftest.py",
+        "owner": "Integration.test_actual_parallel_workers_share_context_and_join_before_seal",
+        "kind": "read"
+      },
+      {
+        "path": "engine/fetch_ibkr_integration_selftest.py",
+        "owner": "Integration.test_actual_resilient_recovery_retains_context_unique_worker_ids",
+        "kind": "read"
+      },
+      {
+        "path": "engine/fetch_ibkr_integration_selftest.py",
+        "owner": "Integration.test_actual_store_unchanged_after_result_failure",
+        "kind": "read"
+      },
+      {
+        "path": "engine/fetch_ibkr_integration_selftest.py",
+        "owner": "Integration.test_cancel_after_durable_decision_has_no_successful_seal",
+        "kind": "read"
+      },
+      {
+        "path": "engine/fetch_ibkr_integration_selftest.py",
+        "owner": "Integration.test_clock_once_and_no_midrun_settlement_advance",
+        "kind": "create"
+      },
+      {
+        "path": "engine/fetch_ibkr_integration_selftest.py",
+        "owner": "Integration.test_documented_farm_notifications_are_not_request_errors",
+        "kind": "read"
+      },
+      {
+        "path": "engine/fetch_ibkr_integration_selftest.py",
+        "owner": "Integration.test_empty_series_presettle_plan_commits_history",
+        "kind": "read"
+      },
+      {
+        "path": "engine/fetch_ibkr_integration_selftest.py",
+        "owner": "Integration.test_inverse_context_recomputation_breaks_real_recovery_identity",
+        "kind": "read"
+      },
+      {
+        "path": "engine/fetch_ibkr_integration_selftest.py",
+        "owner": "Integration.test_reusable_adapter_gets_fresh_context_each_operation",
+        "kind": "read"
+      },
+      {
+        "path": "engine/fetch_ibkr_integration_selftest.py",
+        "owner": "Integration.test_reusable_adapter_gets_fresh_context_each_operation",
+        "kind": "read"
+      },
+      {
+        "path": "engine/fetch_ibkr_integration_selftest.py",
+        "owner": "Integration.test_seal_failure_visible_in_return_and_saved_report",
+        "kind": "read"
+      },
+      {
+        "path": "engine/fetch_ibkr_integration_selftest.py",
+        "owner": "Integration.test_unknown_ib_error_is_ledger_error_never_store_absence",
+        "kind": "read"
+      },
+      {
+        "path": "engine/fetch_operation_inventory.py",
+        "owner": "",
+        "kind": "literal"
+      },
+      {
+        "path": "engine/fetch_operations.py",
+        "owner": "begin_operation",
+        "kind": "create"
+      },
+      {
+        "path": "engine/fetch_operations.py",
+        "owner": "begin_operation",
+        "kind": "import"
+      },
+      {
+        "path": "engine/fetch_run_context.py",
+        "owner": "FetchWorker",
+        "kind": "read"
+      },
+      {
+        "path": "engine/fetch_run_context.py",
+        "owner": "LogicalRequest._execute",
+        "kind": "literal"
+      },
+      {
+        "path": "engine/fetch_run_context.py",
+        "owner": "LogicalRequest._execute",
+        "kind": "read"
+      },
+      {
+        "path": "engine/fetch_run_context.py",
+        "owner": "filter_rows",
+        "kind": "read"
+      },
+      {
+        "path": "engine/fetch_run_context.py",
+        "owner": "unfiltered_diagnostic_evidence",
+        "kind": "read"
+      },
+      {
+        "path": "engine/stock_ibkr.py",
+        "owner": "",
+        "kind": "import"
+      },
+      {
+        "path": "engine/update_data_fence_reference.py",
+        "owner": "fixture",
+        "kind": "create"
+      },
+      {
+        "path": "engine/update_data_fence_reference.py",
+        "owner": "fixture",
+        "kind": "import"
+      }
+    ]
+  }
+}
