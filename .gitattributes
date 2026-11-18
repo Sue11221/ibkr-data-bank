@@ -1,0 +1,6 @@
+# Checkout EOL is part of the custody contract: several *_reference harnesses
+# pin raw SHA-256 of shipped .py sources, so a clone must reproduce the exact
+# bytes regardless of the machine's core.autocrlf.
+*.py text eol=lf
+*.bat text eol=crlf
+requirements.txt text eol=lf

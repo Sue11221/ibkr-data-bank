@@ -1,0 +1,16 @@
+{
+  "AAPL": {
+    "asof": "2026-06-25T10:57:01",
+    "candidates": [
+      "2024-03-15"
+    ],
+    "cleared": [],
+    "interval": "1m",
+    "persistent": [
+      "2024-03-15"
+    ],
+    "source": "3-source",
+    "status": "flagged",
+    "ticker": "AAPL"
+  }
+}

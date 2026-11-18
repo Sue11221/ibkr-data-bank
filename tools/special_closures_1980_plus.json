@@ -1,0 +1,233 @@
+[
+  {
+    "date": "1985-09-27",
+    "kind": "full_closure",
+    "close_et": null,
+    "reason": "Hurricane Gloria",
+    "citation": "[REG]; Forbes \"Hurricane Gloria (Sept. 27, 1985)\""
+  },
+  {
+    "date": "1994-04-27",
+    "kind": "full_closure",
+    "close_et": null,
+    "reason": "Funeral of former President Richard M. Nixon",
+    "citation": "[REG]"
+  },
+  {
+    "date": "2001-09-11",
+    "kind": "full_closure",
+    "close_et": null,
+    "reason": "World Trade Center terrorist attack",
+    "citation": "[REG]; en.wikipedia.org/wiki/Closings_and_cancellations_following_the_September_11_attacks"
+  },
+  {
+    "date": "2001-09-12",
+    "kind": "full_closure",
+    "close_et": null,
+    "reason": "(same event; reopened 2001-09-17 09:33)",
+    "citation": "[REG]"
+  },
+  {
+    "date": "2001-09-13",
+    "kind": "full_closure",
+    "close_et": null,
+    "reason": "(same event)",
+    "citation": "[REG]"
+  },
+  {
+    "date": "2001-09-14",
+    "kind": "full_closure",
+    "close_et": null,
+    "reason": "(same event)",
+    "citation": "[REG]"
+  },
+  {
+    "date": "2004-06-11",
+    "kind": "full_closure",
+    "close_et": null,
+    "reason": "National Day of Mourning, President Ronald W. Reagan",
+    "citation": "[REG]; nbcnews.com/id/wbna5157726"
+  },
+  {
+    "date": "2007-01-02",
+    "kind": "full_closure",
+    "close_et": null,
+    "reason": "National Day of Mourning, President Gerald R. Ford",
+    "citation": "[REG]"
+  },
+  {
+    "date": "2012-10-29",
+    "kind": "full_closure",
+    "close_et": null,
+    "reason": "Hurricane Sandy",
+    "citation": "money.cnn.com/2012/10/29/investing/hurricane-sandy-stock-markets; business.time.com/2012/10/30/better-safe-than-sorry"
+  },
+  {
+    "date": "2012-10-30",
+    "kind": "full_closure",
+    "close_et": null,
+    "reason": "Hurricane Sandy (second day)",
+    "citation": "same"
+  },
+  {
+    "date": "2018-12-05",
+    "kind": "full_closure",
+    "close_et": null,
+    "reason": "National Day of Mourning, President George H.W. Bush",
+    "citation": "tradinghours.com/publications/11-events-that-closed-the-nyse; dividend.com events compilation"
+  },
+  {
+    "date": "2025-01-09",
+    "kind": "full_closure",
+    "close_et": null,
+    "reason": "National Day of Mourning, President Jimmy Carter",
+    "citation": "NYSE/ICE press release 2024-12-30 (ir.theice.com; businesswire.com/news/home/20241230579727)"
+  },
+  {
+    "date": "1981-03-30",
+    "kind": "early_close_unscheduled",
+    "close_et": "15:17",
+    "reason": "Assassination attempt on President Reagan",
+    "citation": "[REG]"
+  },
+  {
+    "date": "1981-09-09",
+    "kind": "early_close_unscheduled",
+    "close_et": "15:28",
+    "reason": "Con Edison power failure, lower Manhattan",
+    "citation": "[REG]"
+  },
+  {
+    "date": "1987-10-23",
+    "kind": "early_close_unscheduled",
+    "close_et": "14:00",
+    "reason": "Post-crash shortened hours (market break of Oct 19, record volume)",
+    "citation": "[REG]"
+  },
+  {
+    "date": "1987-10-26",
+    "kind": "early_close_unscheduled",
+    "close_et": "14:00",
+    "reason": "same program",
+    "citation": "[REG]"
+  },
+  {
+    "date": "1987-10-27",
+    "kind": "early_close_unscheduled",
+    "close_et": "14:00",
+    "reason": "same",
+    "citation": "[REG]"
+  },
+  {
+    "date": "1987-10-28",
+    "kind": "early_close_unscheduled",
+    "close_et": "14:00",
+    "reason": "same",
+    "citation": "[REG]"
+  },
+  {
+    "date": "1987-10-29",
+    "kind": "early_close_unscheduled",
+    "close_et": "14:00",
+    "reason": "same",
+    "citation": "[REG]"
+  },
+  {
+    "date": "1987-10-30",
+    "kind": "early_close_unscheduled",
+    "close_et": "14:00",
+    "reason": "same",
+    "citation": "[REG]"
+  },
+  {
+    "date": "1987-11-02",
+    "kind": "early_close_unscheduled",
+    "close_et": "14:30",
+    "reason": "same, stage 2",
+    "citation": "[REG]"
+  },
+  {
+    "date": "1987-11-03",
+    "kind": "early_close_unscheduled",
+    "close_et": "14:30",
+    "reason": "same",
+    "citation": "[REG]"
+  },
+  {
+    "date": "1987-11-04",
+    "kind": "early_close_unscheduled",
+    "close_et": "14:30",
+    "reason": "same",
+    "citation": "[REG]"
+  },
+  {
+    "date": "1987-11-05",
+    "kind": "early_close_unscheduled",
+    "close_et": "15:00",
+    "reason": "same, stage 3",
+    "citation": "[REG]"
+  },
+  {
+    "date": "1987-11-06",
+    "kind": "early_close_unscheduled",
+    "close_et": "15:00",
+    "reason": "same",
+    "citation": "[REG]"
+  },
+  {
+    "date": "1987-11-09",
+    "kind": "early_close_unscheduled",
+    "close_et": "15:30",
+    "reason": "same, stage 4; normal hours resumed Nov 12",
+    "citation": "[REG]"
+  },
+  {
+    "date": "1987-11-10",
+    "kind": "early_close_unscheduled",
+    "close_et": "15:30",
+    "reason": "same (clerical strike Nov 10–13: NYSE REMAINED OPEN)",
+    "citation": "[REG]"
+  },
+  {
+    "date": "1987-11-11",
+    "kind": "early_close_unscheduled",
+    "close_et": "15:30",
+    "reason": "same",
+    "citation": "[REG]"
+  },
+  {
+    "date": "1994-02-11",
+    "kind": "early_close_unscheduled",
+    "close_et": "14:30",
+    "reason": "Snowstorm",
+    "citation": "[REG]"
+  },
+  {
+    "date": "1996-01-08",
+    "kind": "early_close_unscheduled",
+    "close_et": "14:00",
+    "reason": "Blizzard (also opened late 11:00 — open side excluded per J0.1)",
+    "citation": "[REG]"
+  },
+  {
+    "date": "1997-10-27",
+    "kind": "early_close_unscheduled",
+    "close_et": "15:30",
+    "reason": "Rule-80B circuit breakers: 2:35–3:05 pm halt, then the 3:30 pm halt ended trading for the day",
+    "citation": "[REG]"
+  },
+  {
+    "date": "2005-06-01",
+    "kind": "early_close_unscheduled",
+    "close_et": "15:56",
+    "reason": "Systems communications problem; trading never resumed, crossing sessions cancelled",
+    "citation": "[REG]"
+  },
+  {
+    "date": "2009-07-02",
+    "kind": "late_close_unscheduled",
+    "close_et": "16:15",
+    "reason": "Closed at 4:15 pm in order to execute customer orders impacted by system irregularities",
+    "citation": "[REG]"
+  }
+]

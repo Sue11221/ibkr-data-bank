@@ -1,0 +1,392 @@
+{
+  "version": 1,
+  "baseline_commit": "4a88a76",
+  "source_sha256": {
+    "engine/live_combined_flags.py": "ed091863db4bda99eb2296ad73e77534f19ce8106b9d6c33567689fc78dfe76e",
+    "engine/live_feature_check.py": "71addbd0295a93e35db777ee353acf9c03159733026ded1151631aa678c96ecd",
+    "engine/live_internal_daily_check.py": "5a9720628f1a5b61c0ff9871bed634ac7efc45285c01026da3814f56a601f69c",
+    "engine/live_internal_revalidate.py": "b0d1f3551369f927f1563259a9962396223df089ab8d0e806713d46620d4147e",
+    "engine/live_kind_smoke.py": "77a8b0601b9cd8895ea5918cd48d9be3c9abb46a3d36bafc39badf307ffe6c6d",
+    "engine/live_pipeline_check.py": "50b8764df4e32fb59a90fc7651bcef181a44beb9235b11b77dae6bf522098e11",
+    "engine/live_run_all.py": "ff3bf800e69168565ff7378a87cc2260242a579c20b7bf0bbd3d0188375e49e7",
+    "engine/live_validate_catchup.py": "487309667af8efe67393620861bd8fb92871236ac89857db889a3e4c78a240dd",
+    "engine/two_account_pacing_probe.py": "8acce8d83b4470300f25e1f8a658850277816278a06e8a578a5a1fd7de88b547"
+  },
+  "rows": [
+    [
+      "engine/live_feature_check.py",
+      "main",
+      "'connected to TWS'"
+    ],
+    [
+      "engine/live_feature_check.py",
+      "main",
+      "'connected to TWS'"
+    ],
+    [
+      "engine/live_feature_check.py",
+      "main",
+      "f'qualify({TICKER}) returned a conId'"
+    ],
+    [
+      "engine/live_feature_check.py",
+      "main",
+      "f'qualify({TICKER})'"
+    ],
+    [
+      "engine/live_feature_check.py",
+      "main",
+      "'_prevent_sleep/_allow_sleep ran without error'"
+    ],
+    [
+      "engine/live_feature_check.py",
+      "main",
+      "'_prevent_sleep/_allow_sleep ran without error'"
+    ],
+    [
+      "engine/live_feature_check.py",
+      "main",
+      "'validate_symbols found the symbol'"
+    ],
+    [
+      "engine/live_feature_check.py",
+      "main",
+      "'validate_symbols returned a resolved map with the conId'"
+    ],
+    [
+      "engine/live_feature_check.py",
+      "main",
+      "'exactly ONE qualify_many pass in validate_symbols'"
+    ],
+    [
+      "engine/live_feature_check.py",
+      "main",
+      "\"gap_fill did NOT call qualify_many (reused validate's map)\""
+    ],
+    [
+      "engine/live_feature_check.py",
+      "main",
+      "'gap_fill did NOT call single qualify (used pinned/resolved conId)'"
+    ],
+    [
+      "engine/live_feature_check.py",
+      "main",
+      "'report.prepass_resolved == 1 (the supplied map was honoured)'"
+    ],
+    [
+      "engine/live_feature_check.py",
+      "main",
+      "'series did not halt'"
+    ],
+    [
+      "engine/live_feature_check.py",
+      "main",
+      "'backfill spanned >= 2 month files (multi-month)'"
+    ],
+    [
+      "engine/live_feature_check.py",
+      "main",
+      "'_save_manifest_safely called EXACTLY once for the series'"
+    ],
+    [
+      "engine/live_feature_check.py",
+      "main",
+      "'monthly-span planner kept requests small (<= 10 for ~3 months)'"
+    ],
+    [
+      "engine/live_feature_check.py",
+      "main",
+      "'all committed months re-read without a strict-codec error'"
+    ],
+    [
+      "engine/live_feature_check.py",
+      "main",
+      "'scrub: at least one month checked'"
+    ],
+    [
+      "engine/live_feature_check.py",
+      "main",
+      "'scrub: 0 mismatched hashes'"
+    ],
+    [
+      "engine/live_feature_check.py",
+      "main",
+      "'scrub: 0 missing files'"
+    ],
+    [
+      "engine/live_feature_check.py",
+      "main",
+      "'scrub: every checked month had a recorded hash'"
+    ],
+    [
+      "engine/live_feature_check.py",
+      "main",
+      "'no reception-gap flag on a clean backfill'"
+    ],
+    [
+      "engine/live_feature_check.py",
+      "main",
+      "'reception-gap missing_interior is empty (no false positive)'"
+    ],
+    [
+      "engine/live_feature_check.py",
+      "main",
+      "f'{TICKER} manifest pinned a conId'"
+    ],
+    [
+      "engine/live_feature_check.py",
+      "main",
+      "'pinned conId == the value validate_symbols resolved'"
+    ],
+    [
+      "engine/live_feature_check.py",
+      "main",
+      "'pinned conId == the live qualify probe'"
+    ],
+    [
+      "engine/live_feature_check.py",
+      "main",
+      "'legacy spot-check path is retired'"
+    ],
+    [
+      "engine/live_feature_check.py",
+      "main",
+      "'spot-check result is NOT a MISMATCH'"
+    ],
+    [
+      "engine/live_feature_check.py",
+      "main",
+      "'spot-check compared bars (result ok) or was cleanly skipped'"
+    ],
+    [
+      "engine/live_kind_smoke.py",
+      "test_raw_daily_shape",
+      "'daily IV fetch returned at least one bar'"
+    ],
+    [
+      "engine/live_kind_smoke.py",
+      "test_raw_daily_shape",
+      "f'daily bar.date is datetime.date, not datetime (got {type(b.date).__name__})'"
+    ],
+    [
+      "engine/live_kind_smoke.py",
+      "test_raw_daily_shape",
+      "f'raw daily IV volume is a numeric placeholder = {b.volume} (normalized to 0 on store)'"
+    ],
+    [
+      "engine/live_kind_smoke.py",
+      "test_raw_daily_shape",
+      "f'daily IV close looks like a 0-1 ratio (got {b.close})'"
+    ],
+    [
+      "engine/live_kind_smoke.py",
+      "test_raw_iv_intraday",
+      "'intraday IV fetch returned bars'"
+    ],
+    [
+      "engine/live_kind_smoke.py",
+      "test_raw_iv_intraday",
+      "f'intraday IV bar.date is a datetime (got {type(b.date).__name__})'"
+    ],
+    [
+      "engine/live_kind_smoke.py",
+      "test_raw_iv_intraday",
+      "'all intraday IV closes look like 0-1 ratios'"
+    ],
+    [
+      "engine/live_kind_smoke.py",
+      "test_raw_iv_intraday",
+      "f'intraday IV volume is a numeric placeholder {vols[:3]} (normalized to 0 on store)'"
+    ],
+    [
+      "engine/live_kind_smoke.py",
+      "test_hvol_daily",
+      "'daily HVOL fetch returned bars'"
+    ],
+    [
+      "engine/live_kind_smoke.py",
+      "test_hvol_daily",
+      "f'daily HVOL bar.date is datetime.date (got {type(b.date).__name__})'"
+    ],
+    [
+      "engine/live_kind_smoke.py",
+      "test_hvol_daily",
+      "f'daily HVOL close looks like a 0-1 ratio (got {b.close})'"
+    ],
+    [
+      "engine/live_kind_smoke.py",
+      "test_hvol_daily",
+      "f'daily HVOL volume is a numeric placeholder = {b.volume} (normalized to 0 on store)'"
+    ],
+    [
+      "engine/live_kind_smoke.py",
+      "test_hvol_daily",
+      "f\"engine GUARD: plan_gap rejects sub-daily HVOL ('1m-hvol') -> {err!r}\""
+    ],
+    [
+      "engine/live_kind_smoke.py",
+      "test_iv_rth_only",
+      "'IV fetch (use_rth=False) still returns bars'"
+    ],
+    [
+      "engine/live_kind_smoke.py",
+      "test_iv_rth_only",
+      "'all IV bars fall inside the RTH session (IV is RTH-only)'"
+    ],
+    [
+      "engine/live_kind_smoke.py",
+      "test_end_to_end_store",
+      "f\"gap_fill did not abort (aborted={report.get('aborted')})\""
+    ],
+    [
+      "engine/live_kind_smoke.py",
+      "test_end_to_end_store",
+      "f'series record present for {sel}'"
+    ],
+    [
+      "engine/live_kind_smoke.py",
+      "test_end_to_end_store",
+      "f\"{sel} did not halt (halt={s.get('halt')})\""
+    ],
+    [
+      "engine/live_kind_smoke.py",
+      "test_end_to_end_store",
+      "f\"{sel} added>0 (added={s.get('added')})\""
+    ],
+    [
+      "engine/live_kind_smoke.py",
+      "_readback_ratio_series",
+      "f'{interval}: bars persisted on disk'"
+    ],
+    [
+      "engine/live_kind_smoke.py",
+      "_readback_ratio_series",
+      "f'{interval}: all OHLC values in [0,1] ({len(bad_range)} offenders)'"
+    ],
+    [
+      "engine/live_kind_smoke.py",
+      "_readback_ratio_series",
+      "f'{interval}: stored volume coerced to 0 ({len(bad_vol)} non-zero: {bad_vol[:5]})'"
+    ],
+    [
+      "engine/live_kind_smoke.py",
+      "_readback_ratio_series",
+      "f'{interval}: daily bars are naive-midnight on the correct calendar date ({len(bad_date)} off: {bad_date[:5]})'"
+    ],
+    [
+      "engine/live_kind_smoke.py",
+      "test_daily_update_twice",
+      "f\"run1 '1d-iv' did not halt (halt={(s1.get('halt') if s1 else 'MISSING')})\""
+    ],
+    [
+      "engine/live_kind_smoke.py",
+      "test_daily_update_twice",
+      "f\"run2 did not abort (aborted={rep2.get('aborted')})\""
+    ],
+    [
+      "engine/live_kind_smoke.py",
+      "test_daily_update_twice",
+      "\"run2 produced a '1d-iv' series record\""
+    ],
+    [
+      "engine/live_kind_smoke.py",
+      "test_daily_update_twice",
+      "f\"run2 did NOT halt with the _interval_seconds 'd' failure (halt={halt2})\""
+    ],
+    [
+      "engine/live_kind_smoke.py",
+      "test_span_probe",
+      "f'longest daily span {longest[0]!r} returned bars ({longest[1]})'"
+    ],
+    [
+      "engine/live_kind_smoke.py",
+      "run_raw_group",
+      "f'{fn.__name__} halted: {exc}'"
+    ],
+    [
+      "engine/live_kind_smoke.py",
+      "run_raw_group",
+      "f'{fn.__name__} connection error: {exc}'"
+    ],
+    [
+      "engine/live_kind_smoke.py",
+      "run_raw_group",
+      "f'raw qualify halted: {exc}'"
+    ],
+    [
+      "engine/live_kind_smoke.py",
+      "run_raw_group",
+      "f'raw: could not connect on port {port}: {exc}'"
+    ],
+    [
+      "engine/live_kind_smoke.py",
+      "run_span_group",
+      "f'span qualify halted: {exc}'"
+    ],
+    [
+      "engine/live_kind_smoke.py",
+      "run_span_group",
+      "f'span: could not connect on port {port}: {exc}'"
+    ],
+    [
+      "engine/live_kind_smoke.py",
+      "main",
+      "f'end-to-end store could not connect: {exc}'"
+    ],
+    [
+      "engine/live_kind_smoke.py",
+      "main",
+      "f'daily-update could not connect: {exc}'"
+    ],
+    [
+      "engine/live_pipeline_check.py",
+      "main",
+      "'connect + resolve KO'"
+    ],
+    [
+      "engine/live_pipeline_check.py",
+      "main",
+      "'connect + resolve KO'"
+    ],
+    [
+      "engine/live_pipeline_check.py",
+      "main",
+      "'resolved KO conId'"
+    ],
+    [
+      "engine/live_pipeline_check.py",
+      "main",
+      "'serial run did not halt'"
+    ],
+    [
+      "engine/live_pipeline_check.py",
+      "main",
+      "'pipeline run did not halt (no deadlock/error)'"
+    ],
+    [
+      "engine/live_pipeline_check.py",
+      "main",
+      "'both runs wrote >= 1 month file'"
+    ],
+    [
+      "engine/live_pipeline_check.py",
+      "main",
+      "'pipeline tree is BYTE-IDENTICAL to serial (real TWS)'"
+    ],
+    [
+      "engine/live_pipeline_check.py",
+      "main",
+      "'report counters match (added/written/requests/bars_fetched)'"
+    ],
+    [
+      "engine/live_pipeline_check.py",
+      "main",
+      "f'{tag} scrub clean (0 mismatched/missing)'"
+    ],
+    [
+      "engine/live_run_all.py",
+      "_run_group",
+      "f'{name} CRASHED: {type(exc).__name__}: {exc}'"
+    ]
+  ]
+}

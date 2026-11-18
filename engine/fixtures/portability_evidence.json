@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "note": "Historical deletion evidence retained as a portability fixture. The recorded machine paths are synthetic; the file exists so the portability harness can prove that its evidence exemption is exact (path-bound, not directory- or basename-bound).",
+  "snapshot_cleanup": {
+    "status": "REMOVED_SUPERSEDED_TRACKED_SNAPSHOTS",
+    "total_bytes": 177958,
+    "files": [
+      {
+        "path": "docs/plans/SOURCE_CUSTODY.json",
+        "bytes": 59268,
+        "source_entries": 270
+      },
+      {
+        "path": "docs/plans/SOURCE_CUSTODY_V2.json",
+        "bytes": 59351,
+        "source_entries": 270
+      },
+      {
+        "path": "docs/plans/SOURCE_CUSTODY_V3.json",
+        "bytes": 59339,
+        "source_entries": 270
+      }
+    ]
+  },
+  "copy_disposal": {
+    "status": "COMPLETE_USER_AUTHORIZED_DISPOSAL",
+    "files_deleted": 1337,
+    "bytes_freed": 110084573,
+    "trees": [
+      {
+        "path": "D:/example/Run Logs/c1-copy-20260912-2248",
+        "status": "DELETED_ABSENCE_CONFIRMED",
+        "current_bytes": null,
+        "automatic_deletion_authorized": false
+      },
+      {
+        "path": "C:/Users/someone/AppData/Local/Temp/c1-copy-v3-eec4fccb4ab2450c9a8166987071426f",
+        "status": "DELETED_ABSENCE_CONFIRMED",
+        "current_bytes": null,
+        "automatic_deletion_authorized": false
+      },
+      {
+        "path": "C:/Users/someone/AppData/Local/Temp/c1-followup-20260914-efe797b235994de581997a315ea797f0",
+        "status": "DELETED_ABSENCE_CONFIRMED",
+        "current_bytes": null,
+        "automatic_deletion_authorized": false
+      }
+    ]
+  }
+}

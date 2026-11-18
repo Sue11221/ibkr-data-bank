@@ -1,0 +1,17 @@
+# Generated from dependency_manifest.py; do not maintain a second list.
+# Tested on Python 3.14. Install with: pip install -r requirements.txt
+
+# Required packages
+pandas  # data frames and bank import
+numpy  # numeric bank operations
+pyarrow  # Parquet bank read/write
+ib_async  # IBKR data acquisition
+
+# Optional packages
+tkinterdnd2  # drag-and-drop
+openpyxl  # Excel .xlsx/.xlsm input
+xlrd  # Excel .xls input
+pillow  # chart overlays
+pyautogui; sys_platform == "win32"  # TWS auto-login
+opencv-python; sys_platform == "win32"  # TWS image matching
+pyobjc-framework-Cocoa; sys_platform == "darwin"  # macOS pinch

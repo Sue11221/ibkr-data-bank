@@ -1,0 +1,34 @@
+# --- data + outputs (large, regenerated — NEVER version these) ---------------
+Stock Data Storage/
+Data storage/
+_derived_daily_cache/
+Run Logs/
+/_ingest_reports/
+Validation Reference/
+_code_snapshots/
+_quarantine/
+data_gaps.parquet
+_data_gaps.json
+sp500_current.json
+/export_profile.json
+_scan_digest_cache.json
+**/_cross_validation.json
+**/manifest.json
+
+# --- Python -----------------------------------------------------------------
+__pycache__/
+*.pyc
+*.tmp
+
+# --- dev / debug artifacts (the _-prefixed one-off convention) ---------------
+/_*.png
+/_*.py
+/_live_result_*.json
+*.log
+
+# --- OS ---------------------------------------------------------------------
+.DS_Store
+Thumbs.db
+
+# --- stale backups ----------------------------------------------------------
+_post_ingest_verify/

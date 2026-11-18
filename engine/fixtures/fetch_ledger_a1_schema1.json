@@ -1,0 +1,16 @@
+{
+  "source_commit": "8cb3cd2",
+  "source_path": "engine/fetch_ledger.py",
+  "note": "Generated offline with the unmodified approved ledger class; structural schema/seal fixture, not G5 semantic evidence. Join lines with LF and a final LF.",
+  "ledger_lines": [
+    "{\"attempt_id\":\"attempt\",\"event\":\"decision\",\"logical_id\":\"logical\",\"operation_id\":\"a1-compatibility\",\"payload\":{\"requested\":{\"con_id\":0,\"method\":\"qualification\",\"symbol\":\"TEST\",\"variant\":\"ibkr-metadata\"}},\"producer_id\":\"ibkr.choke.qualify\",\"schema_version\":1,\"seq\":1,\"timestamp\":\"2026-09-08T23:27:28.161392+00:00\",\"worker_id\":\"worker\"}",
+    "{\"attempt_id\":\"attempt\",\"event\":\"result\",\"logical_id\":\"logical\",\"operation_id\":\"a1-compatibility\",\"payload\":{\"outcome\":\"returned\",\"response_digest\":\"fixture\"},\"producer_id\":\"ibkr.choke.qualify\",\"schema_version\":1,\"seq\":2,\"timestamp\":\"2026-09-08T23:27:28.162879+00:00\",\"worker_id\":\"worker\"}",
+    "{\"attempt_id\":\"__run__\",\"event\":\"seal\",\"logical_id\":\"__run__\",\"operation_id\":\"a1-compatibility\",\"payload\":{\"prior_count\":2,\"prior_sha256\":\"2143283389afbb49de0504b52aa7b2457d74eeda570e6bc5575b5657dc3a8717\"},\"producer_id\":\"__run__\",\"schema_version\":1,\"seq\":3,\"timestamp\":\"2026-09-08T23:27:28.163542+00:00\",\"worker_id\":\"__run__\"}"
+  ],
+  "receipt": {
+    "event_count": 3,
+    "file_sha256": "884e39d5446da396b07a05173d91dcf3d07919fee45815642cf6fe8156ff062e",
+    "operation_id": "a1-compatibility",
+    "schema_version": 1
+  }
+}

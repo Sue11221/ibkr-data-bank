@@ -1,0 +1,204 @@
+{
+  "schema_version": 1,
+  "records": [
+    {
+      "run_id": "ticker-repair-pcg-20260708-codex",
+      "kind": "ticker_repair",
+      "tickers": ["PCG"],
+      "performed_at": "2026-07-08T18:21:18-04:00",
+      "script": {
+        "basename": "ticker_repair_pcg_20260708.py",
+        "size": 17168,
+        "sha256": "d6777756f8c4c009c1c141f88dc2059789e61cd5e37a4ff4af36b92866834a23",
+        "archive": {
+          "state": "archived_disabled",
+          "basename": "ticker_repair_pcg_20260708.py.disabled",
+          "archived_at": "2026-07-10T13:56:35-04:00"
+        }
+      },
+      "artifact": {
+        "basename": "ticker-repair-pcg-20260708-codex.json",
+        "size": 206345,
+        "sha256": "152120d4a3ca3895114722cd273899ba64c50cee1041d50c776b963309668914",
+        "schema": "ticker_repair"
+      },
+      "historical_result": "pass",
+      "reviewer_state": "claude_approved",
+      "reviewed_disposition": "approved_complete",
+      "disposition_asof": "2026-07-08T18:21:35-04:00",
+      "historical_only": true,
+      "superseded_by": null,
+      "resolved_by": null,
+      "allowed_views": ["summary", "before_after", "verification", "fetch_totals"]
+    },
+    {
+      "run_id": "ticker-repair-kdp-20260708-codex",
+      "kind": "ticker_repair",
+      "tickers": ["KDP"],
+      "performed_at": "2026-07-08T18:38:32-04:00",
+      "script": {
+        "basename": "ticker_repair_kdp_20260708.py",
+        "size": 17920,
+        "sha256": "b06edcbfa5d5a87df8a18b058920afb2b433983a74eea28e73f2f67fb3a88d8a",
+        "archive": {
+          "state": "archived_disabled",
+          "basename": "ticker_repair_kdp_20260708.py.disabled",
+          "archived_at": "2026-07-10T13:56:35-04:00"
+        }
+      },
+      "artifact": {
+        "basename": "ticker-repair-kdp-20260708-codex.json",
+        "size": 211251,
+        "sha256": "6174923326926bfec7a316bb03b14690b8cef582e0e862bf09f52fa40a74bc09",
+        "schema": "ticker_repair"
+      },
+      "historical_result": "pass",
+      "reviewer_state": "claude_approved",
+      "reviewed_disposition": "approved_complete",
+      "disposition_asof": "2026-07-08T18:38:49-04:00",
+      "historical_only": true,
+      "superseded_by": null,
+      "resolved_by": null,
+      "allowed_views": ["summary", "before_after", "verification", "fetch_totals"]
+    },
+    {
+      "run_id": "ticker-repair-ftnt-20260708-codex",
+      "kind": "ticker_repair",
+      "tickers": ["FTNT"],
+      "performed_at": "2026-07-08T18:49:36-04:00",
+      "script": {
+        "basename": "ticker_repair_ftnt_20260708.py",
+        "size": 20240,
+        "sha256": "7e342cdd441dc4a065ca0ce03255f6fa3c6edeb02c0715bcf46701f873b08659",
+        "archive": {
+          "state": "archived_disabled",
+          "basename": "ticker_repair_ftnt_20260708.py.disabled",
+          "archived_at": "2026-07-10T13:56:35-04:00"
+        }
+      },
+      "artifact": {
+        "basename": "ticker-repair-ftnt-20260708-codex.json",
+        "size": 144367,
+        "sha256": "c3b63ffa973733ad910cdb1e1c4aed7afb12cdbc014446efb85b2aa1d56d3f67",
+        "schema": "ticker_repair"
+      },
+      "historical_result": "pass",
+      "reviewer_state": "superseded",
+      "reviewed_disposition": "superseded_by_phantom_correction",
+      "disposition_asof": "2026-07-09T12:19:14-04:00",
+      "historical_only": true,
+      "superseded_by": "ftnt-phantom-fix-20260709-codex",
+      "resolved_by": null,
+      "allowed_views": ["summary", "before_after", "verification", "fetch_totals"]
+    },
+    {
+      "run_id": "ticker-repair-odfl-backfill-20260708-codex",
+      "kind": "ticker_repair",
+      "tickers": ["ODFL"],
+      "performed_at": "2026-07-08T19:47:59-04:00",
+      "script": {
+        "basename": "ticker_repair_odfl_20260708.py",
+        "size": 14883,
+        "sha256": "b15433fcd4328f46de73dd535fcf411a68364b973c4e995fd248f4950b6486e2",
+        "archive": {
+          "state": "archived_disabled",
+          "basename": "ticker_repair_odfl_20260708.py.disabled",
+          "archived_at": "2026-07-10T13:56:35-04:00"
+        }
+      },
+      "artifact": {
+        "basename": "ticker-repair-odfl-backfill-20260708-codex.json",
+        "size": 19069,
+        "sha256": "383915648c1a7e07d34f3f86cf262fc6217c0a05ef7b34c6268b4c745440472e",
+        "schema": "ticker_repair"
+      },
+      "historical_result": "fail",
+      "reviewer_state": "resolved_source_limited",
+      "reviewed_disposition": "resolved_source_limited",
+      "disposition_asof": "2026-07-09T17:43:15-04:00",
+      "historical_only": true,
+      "superseded_by": null,
+      "resolved_by": "ticker-repair-odfl-availability-probe-20260708-codex",
+      "allowed_views": ["summary", "before_after", "verification", "fetch_totals"]
+    },
+    {
+      "run_id": "ticker-repair-odfl-availability-probe-20260708-codex",
+      "kind": "availability_probe",
+      "tickers": ["ODFL"],
+      "performed_at": "2026-07-08T19:55:04-04:00",
+      "script": null,
+      "artifact": {
+        "basename": "ticker-repair-odfl-availability-probe-20260708-codex.json",
+        "size": 5844,
+        "sha256": "3dc9a7dfc9aa167b411e346d9bf4b22e5d0b601446ce8cff036c758406a196eb",
+        "schema": "availability_probe"
+      },
+      "historical_result": "blocked",
+      "reviewer_state": "resolved_source_limited",
+      "reviewed_disposition": "source_limited_evidence",
+      "disposition_asof": "2026-07-09T17:43:15-04:00",
+      "historical_only": true,
+      "superseded_by": null,
+      "resolved_by": null,
+      "allowed_views": ["summary", "verification"]
+    },
+    {
+      "run_id": "live-seam-fetch-check-20260709-codex",
+      "kind": "live_seam_probe",
+      "tickers": [
+        "ABT", "ADP", "APO", "APTV", "BAX", "BDX", "CAG", "COP",
+        "DD", "DHR", "DOV", "DRI", "DTE", "EBAY", "ECHO", "EXC",
+        "EXPE", "FDX", "FLEX", "FTNT", "FTV", "GE", "HLT", "HPE",
+        "HPQ", "HSIC", "HWM", "J", "JCI", "LH", "MAS", "MDLZ",
+        "MET", "MMM", "NI", "OKE", "PNR", "RJF", "RTX", "TT", "VTR",
+        "WBD", "WDC", "WMB", "YUM"
+      ],
+      "performed_at": "2026-07-09T10:46:29-04:00",
+      "script": {
+        "basename": "live_seam_fetch_check_20260709.py",
+        "size": 14689,
+        "sha256": "707e8821be946dca088bcfce8dc20649722f22da2c07dcb6abd4daeab7e8cf95",
+        "archive": {
+          "state": "archived_disabled",
+          "basename": "live_seam_fetch_check_20260709.py.disabled",
+          "archived_at": "2026-07-10T13:56:35-04:00"
+        }
+      },
+      "artifact": {
+        "basename": "live-seam-fetch-check-20260709-codex.json",
+        "size": 152849,
+        "sha256": "e679aeb7eeca6f799bd473597c05c3ab744967ff54ae1a3eb9117466cb47bc7c",
+        "schema": "live_seam_probe"
+      },
+      "historical_result": "evidence_captured",
+      "reviewer_state": "accepted_evidence",
+      "reviewed_disposition": "historical_asof_probe",
+      "disposition_asof": "2026-07-10T00:00:00-04:00",
+      "historical_only": true,
+      "superseded_by": null,
+      "resolved_by": null,
+      "allowed_views": ["summary", "seam_rows"]
+    },
+    {
+      "run_id": "ftnt-phantom-fix-20260709-codex",
+      "kind": "bank_correction",
+      "tickers": ["FTNT"],
+      "performed_at": "2026-07-09T12:08:20-04:00",
+      "script": null,
+      "artifact": {
+        "basename": "ftnt-phantom-fix-20260709-codex.json",
+        "size": 37484,
+        "sha256": "fddd78288a13b8edbb85891f0c86180ba7199b2963cfe9ae3bb868280fede186",
+        "schema": "phantom_fix"
+      },
+      "historical_result": "pass",
+      "reviewer_state": "claude_approved",
+      "reviewed_disposition": "approved_complete",
+      "disposition_asof": "2026-07-09T17:43:15-04:00",
+      "historical_only": true,
+      "superseded_by": null,
+      "resolved_by": null,
+      "allowed_views": ["summary", "verification"]
+    }
+  ]
+}
