@@ -4,7 +4,7 @@
     "engine.stock_validate.record_ibkr_earliest": "ae6fbe5ade9bb4d4ab0dd352fb0ebc0f08da235858e1f2375d6beac79ab3277a"
   },
   "candidate_count": 71,
-  "candidate_surface_sha256": "0d83b4d3be77bd6be744d1f8e914e8f59246953bcbbf29eaf0d0712828fe394b",
+  "candidate_surface_sha256": "6f41c00443b59ca73d9399fcc03e6d36e271e6eb326d143590320e209f96a802",
   "disposition_counts": {
     "a1_context_required": 11,
     "a2_refused": 32,
@@ -1223,7 +1223,7 @@
       ],
       "column": 17,
       "disposition": "control_socket",
-      "line": 287,
+      "line": 643,
       "module": "engine.tws_discovery",
       "primitive": "socket",
       "producer_id": "socket.tws_discovery.scan",

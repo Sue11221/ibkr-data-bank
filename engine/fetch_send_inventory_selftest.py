@@ -105,7 +105,7 @@ check("candidate surface digest is canonical lowercase SHA-256",
       == inventory["candidate_surface_sha256"])
 check("A2-3c exact finite membership and source-line surface digest is pinned",
       inventory["candidate_surface_sha256"]
-      == "0d83b4d3be77bd6be744d1f8e914e8f59246953bcbbf29eaf0d0712828fe394b")
+      == "6f41c00443b59ca73d9399fcc03e6d36e271e6eb326d143590320e209f96a802")
 check("artifact contains no project absolute path",
       str(ENGINE_ROOT.parent).casefold() not in
       inv.render_inventory(inventory).decode("utf-8").casefold())
@@ -1113,7 +1113,7 @@ _EXCLUDED_PROOF_SOURCES = {
         "PHASE0_MUST_BE_HELD", ("from fetch_ibkr_bridge import RequestRefused, refuse_a2",)),
     "engine/stock_ibkr_selftest.py": ("8eaa5edf3235ed7032af89b12a000059f0a5d2da6ca21a6946026fdb46b70611",
         "STOCK_FAKE_AND_LOOPBACK", ("class FakeAdapter:","fake.IB = _FakeIB","sys.modules[\"ib_async\"] = fake",)),
-    "engine/tws_discovery_reference.py": ("9e9a37615033c49fbf253cc6a4ed75d7dbb12e67261cbde0e144d888dda52714",
+    "engine/tws_discovery_reference.py": ("de0b44e5a2b8fd9d74fe665d572f633eb561b12d9bbb065839fb99ce444a25d4",
         "DISCOVERY_LOOPBACK", ("def f4_port_scan():","s.bind((\"127.0.0.1\", 0))",)),
 }
 _EXCLUDED_DEPENDENCY_SHA256 = {
