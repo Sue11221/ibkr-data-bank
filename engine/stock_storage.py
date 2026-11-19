@@ -2508,7 +2508,19 @@ def scan_storage(root, progress=None, workers=None, digest_cache=False):
     that hold (or held) data; the only thing it may delete is a stale
     *.tmp left behind by an interrupted _atomic_write_bytes. Fast path: a
     file whose size + mtime_ns match its manifest entry is trusted without
-    re-parsing, so rescans of a settled tree are near-instant. Ticker folders
+    re-parsing, so rescans of a settled tree are near-instant. Resettle
+    path: when only mtime_ns differs (a copy or move of the bank changes
+    every modified time), a file whose "present" entry has the same size and
+    a 64-hex SHA-256 equal to the hash of its bytes is trusted without
+    re-parsing too: the file's stats before the open and after the close,
+    and its open handle's stats before and after the read, must carry one
+    (dev, ino, size, mtime_ns) signature, and only the entry's mtime_ns is
+    replaced (the manifest is then saved). Anything short of that proof
+    (no or malformed SHA-256, another size or status, a locked, vanishing
+    or changing file) gets the full strict re-read exactly as before. A
+    matching fingerprint proves the bytes are the ones last written or
+    checked; like the fast path, it does not re-apply checking rules that
+    were tightened since. Ticker folders
     are scanned CONCURRENTLY (the walk is I/O-bound) into per-ticker results
     that are MERGED in folder order, so the aggregate is identical to a serial
     scan; pass workers=1 to force the serial path.
@@ -2870,6 +2882,34 @@ def _scan_ticker(tdir, result):
                 and entry.get("size") == st.st_size
                 and entry.get("mtime_ns") == st.st_mtime_ns):
             continue                      # trusted fast path
+        proof = (entry or {}).get("sha256")
+        if (isinstance(proof, str) and _FINGERPRINT_SHA_RE.fullmatch(proof)
+                and entry.get("status") == "present"
+                and entry.get("size") == st.st_size):
+            # RESETTLE path: a copy or move of the bank changes every modified
+            # time but no byte. read_month_file's stat/read/stat discipline,
+            # held as strictly as _read_stable_manifest_bytes holds it: the
+            # compare-time stat above, the open handle before and after the
+            # read, and a stat after the close must carry ONE (dev, ino, size,
+            # mtime_ns) signature, so the bytes hashed and the time recorded
+            # are one version of the file. Proven -> replace mtime_ns ONLY.
+            # Anything else (any OSError included) falls through to the full
+            # strict re-read below, which runs and reports exactly as before.
+            try:
+                with open(fp, "rb") as fh:
+                    opened = os.fstat(fh.fileno())
+                    raw = fh.read(st.st_size + 1)
+                    drained = os.fstat(fh.fileno())
+                after = os.stat(fp)
+            except OSError:
+                raw = None
+            if (raw is not None and len(raw) == st.st_size
+                    and len({_manifest_stat_signature(s)
+                             for s in (st, opened, drained, after)}) == 1
+                    and hashlib.sha256(raw).hexdigest() == proof):
+                entry["mtime_ns"] = st.st_mtime_ns
+                changed = True
+                continue
         try:
             bars, stats = read_month_file(Path(fp))
         except StorageFormatError as exc:

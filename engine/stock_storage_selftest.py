@@ -4,7 +4,12 @@ Byte-exact golden tests use the REAL first rows of the user's archive
 (AAPL_10Y_1m.csv), so a pandas/Python upgrade or an edit that drifts the
 format fails here before it can fork the tree. ASCII output only."""
 
+import copy
+import hashlib
+import inspect
+import json
 import os
+import re
 import shutil
 import sys
 import tempfile
@@ -53,6 +58,7 @@ def main():
     tmp = Path(tempfile.mkdtemp(prefix="ss_selftest_"))
     try:
         run(tmp)
+        run_resettle(tmp)
     finally:
         shutil.rmtree(tmp, ignore_errors=True)
     print()
@@ -694,12 +700,21 @@ def run(tmp):
             raise PermissionError(13, "locked by AV", str(path))
         return orig_read(path)
 
+    def _deny_open(file, *a, **k):
+        # A real lock refuses EVERY read of the file, so also the fingerprint
+        # read the scan tries before the strict re-read (see [18]).
+        if Path(file).name == ko2.name:
+            raise PermissionError(13, "locked by AV", str(file))
+        return open(file, *a, **k)
+
     ss.read_month_file = _deny
+    ss.open = _deny_open                   # module-level name shadows builtin
     try:
         os.utime(ko2)                      # force a re-parse attempt
         res = ss.scan_storage(r2)
     finally:
         ss.read_month_file = orig_read
+        del ss.open
     check("locked file does not abort the scan (others still listed)",
           "AAPL" in res["tickers"]
           and any("unreadable" in m for _p, m in res["errors"]))
@@ -1045,6 +1060,636 @@ def run(tmp):
         ss._scan_ticker = orig_st
         with ss._DIGEST_LOCK:                  # drop the test bank's memo entry
             ss._DIGEST_MEM.pop(str(Path(droot).resolve()), None)
+
+
+# --- [18] fingerprint resettle after a copy or move ---------------------------
+# A copy or move of the bank changes every modified time but no byte. A
+# "present" month entry whose size and SHA-256 still match its file is then
+# resettled (only mtime_ns replaced) without the strict re-read; every case
+# short of that proof gets the strict re-read exactly as before. Each
+# scenario builds its own scratch bank and RETURNS its results, so the same
+# battery also runs against deliberately broken copies of _scan_ticker.
+
+_RS_FILES = (("RSA", 2024, 12, 2, "csv"), ("RSA", 2025, 1, 2, None),
+             ("RSA", 2025, 2, 3, None), ("RSB", 2025, 1, 2, None),
+             ("RSB", 2025, 3, 3, None))
+_RS_LEDGER = [{"day": "2025-03-03", "field": "close", "stored_value": 10.25,
+               "served_value": 10.3, "reason": "jump_up",
+               "run_id": "resettle-selftest"}]
+_RS_MUTANTS = (   # (label, regex over _scan_ticker's source, replacement)
+    ("skips the fingerprint comparison",
+     r"\n\s+and hashlib\.sha256\(raw\)\.hexdigest\(\) == proof\)", ")"),
+    ("skips the size comparison (entry size vs file size)",
+     r"\n\s+and entry\.get\(\"size\"\) == st\.st_size\)", ")"),
+    ("skips the byte-count comparison",
+     r" and len\(raw\) == st\.st_size", ""),
+    ("skips the one-signature comparison",
+     r"\n\s+and len\(\{_manifest_stat_signature\(s\)\n\s+for s in "
+     r"\(st, opened, drained, after\)\}\) == 1", ""),
+)
+
+
+def _rs_build(root):
+    """Two tickers (so the scan runs threaded), Parquet months and one legacy
+    CSV month, settled by two scans. Returns {file name: Path}."""
+    files = {}
+    for tk, y, m, d, fmt in _RS_FILES:
+        p = ss.month_file_path(root, tk, y, m, "1m", fmt=fmt)
+        ss.write_month_file(p, [(datetime(y, m, d, 9, 30 + i),
+                                 10.0, 10.5, 9.5, 10.25, 100 + i)
+                                for i in range(3)])
+        files[p.name] = p
+    ss.scan_storage(root)
+    ss.scan_storage(root)
+    return files
+
+
+def _rs_slot(root, path):
+    fm = ss.FILENAME_RE.match(Path(path).name)
+    return Path(root) / fm.group(1), fm.group(4), f"{fm.group(2)}-{fm.group(3)}"
+
+
+def _rs_entry(root, path):
+    tdir, iv, key = _rs_slot(root, path)
+    man = ss.load_manifest(tdir) or {}
+    return ((((man.get("intervals") or {}).get(iv) or {})
+             .get("months") or {}).get(key))
+
+
+def _rs_edit(root, path, edit):
+    tdir, iv, key = _rs_slot(root, path)
+    man = ss.load_manifest(tdir)
+    edit(ss.manifest_months(man, iv)[key])
+    ss.save_manifest(tdir, man)
+
+
+def _rs_retime(paths, back_s=86_400):
+    """Give each file its own new modified time, as a copy or move does
+    (whole 2-second steps stay distinct on any file system's time grain)."""
+    for i, p in enumerate(sorted(paths, key=lambda q: q.name)):
+        st = os.stat(p)
+        os.utime(p, ns=(st.st_atime_ns,
+                        st.st_mtime_ns - (back_s + 2 * i) * 1_000_000_000))
+
+
+def _rs_sha(data):
+    return hashlib.sha256(data).hexdigest()
+
+
+def _rs_norm(res):
+    return json.dumps(res, sort_keys=True, default=str)
+
+
+def _rs_no_mtime(entry):
+    return {k: v for k, v in (entry or {}).items() if k != "mtime_ns"}
+
+
+def _rs_manifest_state(tdir):
+    p = Path(tdir) / ss.MANIFEST_NAME
+    return p.read_bytes(), ss._manifest_stat_signature(os.stat(p))
+
+
+def _rs_errors(res):
+    return [(Path(p), m) for p, m in res["errors"]]
+
+
+class _RsSpy:
+    """Counts, through stock_storage's own module names, what a scan does:
+    strict re-reads (read_month_file), strict parser calls, month files that
+    _scan_ticker opens itself (the fingerprint read), SHA-256 calls and
+    manifest saves. `hook(path, args, kwargs)` may stand in for such an open
+    to stage a file that changes, vanishes or fails while it is read."""
+
+    _NAMES = ("read_month_file", "_parse_parquet_payload",
+              "_parse_month_payload", "save_manifest", "hashlib")
+
+    def __init__(self, hook=None):
+        self.hook = hook
+        self.reads, self.parses, self.opens = [], [], []
+        self.hashes, self.saves = [], []
+        self._real = {}
+
+    def __enter__(self):
+        real = self._real = {n: getattr(ss, n) for n in self._NAMES}
+        spy = self
+
+        def read_month_file(path, *a, **k):
+            spy.reads.append(Path(path).name)
+            return real["read_month_file"](path, *a, **k)
+
+        def parse_parquet(*a, **k):
+            spy.parses.append("parquet")
+            return real["_parse_parquet_payload"](*a, **k)
+
+        def parse_csv(*a, **k):
+            spy.parses.append("csv")
+            return real["_parse_month_payload"](*a, **k)
+
+        def save_manifest(tdir, manifest):
+            spy.saves.append(Path(tdir).name)
+            return real["save_manifest"](tdir, manifest)
+
+        class _Hashlib:
+            def __getattr__(self, attr):
+                return getattr(real["hashlib"], attr)
+
+            def sha256(self, *a, **k):
+                spy.hashes.append(1)
+                return real["hashlib"].sha256(*a, **k)
+
+        def scan_open(file, *a, **k):
+            if (isinstance(file, (str, os.PathLike))
+                    and sys._getframe(1).f_code.co_name == "_scan_ticker"
+                    and ss.FILENAME_RE.match(Path(file).name)):
+                spy.opens.append(Path(file).name)
+                if spy.hook is not None:
+                    return spy.hook(Path(file), a, k)
+            return open(file, *a, **k)
+
+        ss.read_month_file = read_month_file
+        ss._parse_parquet_payload = parse_parquet
+        ss._parse_month_payload = parse_csv
+        ss.save_manifest = save_manifest
+        ss.hashlib = _Hashlib()
+        ss.open = scan_open                # module-level name shadows builtin
+        return self
+
+    def __exit__(self, *exc):
+        for name, value in self._real.items():
+            setattr(ss, name, value)
+        del ss.open
+        return False
+
+
+class _RsHandle:
+    """Stands in for the file object _scan_ticker reads: real reads unless
+    `data` replaces what read() returns or `fail` is raised by it; `swap`
+    = (n, fd) makes the n-th fileno() call (0-based) return another file's
+    descriptor; `during_read` runs after the real read, `on_close` after the
+    real close."""
+
+    def __init__(self, path, data=None, fail=None, swap=None,
+                 during_read=None, on_close=None):
+        self._fh = open(path, "rb")
+        self._data, self._fail, self._swap = data, fail, swap
+        self._during_read, self._on_close = during_read, on_close
+        self._calls = 0
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *exc):
+        self._fh.close()
+        if self._on_close is not None:
+            self._on_close()
+        return False
+
+    def fileno(self):
+        n, self._calls = self._calls, self._calls + 1
+        if self._swap is not None and self._swap[0] == n:
+            return self._swap[1]
+        return self._fh.fileno()
+
+    def read(self, size=-1):
+        if self._fail is not None:
+            raise self._fail
+        data = self._fh.read(size)
+        if self._data is not None:
+            data = self._data if size is None or size < 0 else self._data[:size]
+        if self._during_read is not None:
+            self._during_read()
+        return data
+
+
+def _rs_times_changed(base, rec):
+    """Plan checks 1 (times changed, contents equal) and 4 (settled after)."""
+    root = ss.storage_root(base / "times")
+    files = _rs_build(root)
+    before = {n: _rs_entry(root, p) for n, p in files.items()}
+    _rs_retime(files.values())
+    twin = ss.storage_root(base / "times-twin")
+    shutil.copytree(root, twin)            # an identical copy, times kept
+    twin_files = {n: twin / p.relative_to(root) for n, p in files.items()}
+    same_times = all(os.stat(twin_files[n]).st_mtime_ns
+                     == os.stat(p).st_mtime_ns for n, p in files.items())
+    for p in twin_files.values():          # no stored proof -> full re-read
+        _rs_edit(twin, p, lambda e: e.pop("sha256", None))
+    with _RsSpy() as spy:
+        res = ss.scan_storage(root)
+    with _RsSpy() as twin_spy:
+        twin_res = ss.scan_storage(twin)
+    after = {n: _rs_entry(root, p) for n, p in files.items()}
+    twin_after = {n: _rs_entry(twin, p) for n, p in twin_files.items()}
+    rec("times changed: the strict parser is not called once",
+        not spy.reads and not spy.parses, f"{spy.reads} {spy.parses}")
+    rec("times changed: every month fingerprint-read once, each ticker saved",
+        sorted(spy.opens) == sorted(files) and len(spy.hashes) >= len(files)
+        and sorted(spy.saves) == ["RSA", "RSB"],
+        f"{spy.opens} {len(spy.hashes)} {spy.saves}")
+    rec("times changed: entries differ only in mtime_ns = the file's time",
+        all(after[n] is not None and before[n] is not None
+            and set(after[n]) == set(before[n])
+            and _rs_no_mtime(after[n]) == _rs_no_mtime(before[n])
+            and after[n]["mtime_ns"] == os.stat(p).st_mtime_ns
+            and after[n]["mtime_ns"] != before[n]["mtime_ns"]
+            for n, p in files.items()), repr((before, after)))
+    rec("times changed: the identical copy without proof is fully re-read",
+        same_times and sorted(twin_spy.reads) == sorted(files)
+        and not twin_spy.opens, f"{same_times} {twin_spy.reads}")
+    rec("times changed: scan result and entries equal the full re-read's",
+        _rs_norm(res) == _rs_norm(twin_res) and after == twin_after,
+        repr((res, twin_res, after, twin_after)))
+    state = {t: _rs_manifest_state(root / t) for t in ("RSA", "RSB")}
+    with _RsSpy() as spy:
+        res2 = ss.scan_storage(root)
+    rec("settled afterwards: rescan takes the size+time path, no hashing",
+        not (spy.reads or spy.parses or spy.opens or spy.hashes),
+        f"{spy.reads} {spy.parses} {spy.opens} {len(spy.hashes)}")
+    rec("settled afterwards: no manifest write, same scan result",
+        not spy.saves and _rs_norm(res2) == _rs_norm(res)
+        and {t: _rs_manifest_state(root / t) for t in ("RSA", "RSB")}
+        == state, f"{spy.saves}")
+
+
+def _rs_same_size(base, rec):
+    """Plan check 2: same size, different contents."""
+    root = ss.storage_root(base / "samesize")
+    files = _rs_build(root)
+    csvp = files["RSA_2024-12_1m.csv"]
+    old = csvp.read_bytes()
+    good = old.replace(b",100\r\n", b",109\r\n", 1)   # same length, valid
+    csvp.write_bytes(good)
+    _rs_retime([csvp])
+    with _RsSpy() as spy:
+        res = ss.scan_storage(root)
+    ent = _rs_entry(root, csvp) or {}
+    rec("same size, other valid bytes: hashed, then fully re-read",
+        good != old and len(good) == len(old) and spy.opens == [csvp.name]
+        and spy.reads == [csvp.name] and not res["errors"],
+        f"{spy.opens} {spy.reads} {res['errors']}")
+    rec("same size, other valid bytes: the entry takes the new fingerprint",
+        ent.get("sha256") == _rs_sha(good) and ent.get("size") == len(good)
+        and ent.get("status") == "present"
+        and ent.get("mtime_ns") == os.stat(csvp).st_mtime_ns, repr(ent))
+    before = _rs_entry(root, csvp)
+    bad = good.replace(b",109\r\n", b",1x9\r\n", 1)    # same length, invalid
+    csvp.write_bytes(bad)
+    _rs_retime([csvp])
+    with _RsSpy() as spy:
+        res = ss.scan_storage(root)
+    try:
+        ss.read_month_file(csvp)
+        want = None
+    except ss.StorageFormatError as exc:
+        want = str(exc)
+    rec("same size, invalid bytes: the format error is reported as before",
+        want is not None and len(bad) == len(old)
+        and _rs_errors(res) == [(csvp, want)]
+        and spy.opens == [csvp.name] and spy.reads == [csvp.name],
+        f"{want!r} {res['errors']} {spy.opens} {spy.reads}")
+    rec("same size, invalid bytes: only the entry's status changes",
+        _rs_entry(root, csvp) == dict(before, status="format-error"),
+        repr((before, _rs_entry(root, csvp))))
+
+
+def _rs_no_proof(base, rec):
+    """Plan check 3: no proof, no shortcut (and no fingerprint read)."""
+    root = ss.storage_root(base / "noproof")
+    files = _rs_build(root)
+    tgt = files["RSA_2025-01_1m.parquet"]
+    good = _rs_sha(tgt.read_bytes())
+    cases = (
+        ("no sha256", lambda e: e.pop("sha256")),
+        ("sha256 null", lambda e: e.update(sha256=None)),
+        ("sha256 a number", lambda e: e.update(sha256=12345)),
+        ("sha256 a list", lambda e: e.update(sha256=[good])),
+        ("sha256 upper-case", lambda e: e.update(sha256=good.upper())),
+        ("sha256 63 digits", lambda e: e.update(sha256=good[:-1])),
+        ("sha256 65 digits", lambda e: e.update(sha256=good + "0")),
+        ("sha256 + newline", lambda e: e.update(sha256=good + "\n")),
+        ("sha256 not hex", lambda e: e.update(sha256="g" * 64)),
+        ("size differs, sha256 right",
+         lambda e: e.update(size=e["size"] + 1)),
+        ("size smaller, sha256 right",
+         lambda e: e.update(size=e["size"] - 1)),
+        ("status format-error, sha256 right",
+         lambda e: e.update(status="format-error")),
+        ("status MISSING, sha256 right",
+         lambda e: e.update(status="MISSING")),
+        ("no status, sha256 right", lambda e: e.pop("status")),
+    )
+    for label, edit in cases:
+        _rs_edit(root, tgt, edit)
+        _rs_retime([tgt])
+        with _RsSpy() as spy:
+            res = ss.scan_storage(root)
+        ent = _rs_entry(root, tgt) or {}
+        rec(f"no proof ({label}): full re-read, no fingerprint read",
+            spy.reads == [tgt.name] and not spy.opens
+            and not res["errors"] and not res["warnings"]
+            and ent.get("status") == "present" and ent.get("sha256") == good
+            and ent.get("size") == tgt.stat().st_size
+            and ent.get("mtime_ns") == tgt.stat().st_mtime_ns,
+            f"{spy.reads} {spy.opens} {res['errors']} {res['warnings']} {ent}")
+
+
+def _rs_evidence(base, rec):
+    """Plan check 5: correction evidence survives the resettle."""
+    root = ss.storage_root(base / "evidence")
+    files = _rs_build(root)
+    tgt = files["RSB_2025-03_1m.parquet"]
+    _rs_edit(root, tgt, lambda e: e.update(
+        value_corrections=copy.deepcopy(_RS_LEDGER)))
+    before = _rs_entry(root, tgt)
+    _rs_retime(files.values())
+    with _RsSpy() as spy:
+        ss.scan_storage(root)
+    after = _rs_entry(root, tgt) or {}
+    rec("evidence kept: value_corrections survive the resettle unchanged",
+        not spy.reads and after.get("value_corrections") == _RS_LEDGER
+        and _rs_no_mtime(after) == _rs_no_mtime(before)
+        and after.get("mtime_ns") == tgt.stat().st_mtime_ns,
+        repr((before, after, spy.reads)))
+
+
+def _rs_unstable(base, rec):
+    """Plan check 6: a file that changes, vanishes, fails or is locked while
+    it is fingerprint-read is never trusted; the strict re-read then runs
+    and reports exactly what it reports without the fingerprint read."""
+    def rewrite(path, data, stamp, replace):
+        if stamp:
+            return
+        if replace:                        # a writer's temp + os.replace
+            tmpf = path.with_name(path.name + ".swap")
+            tmpf.write_bytes(data)
+            os.replace(tmpf, path)
+        else:                              # an in-place rewrite
+            with open(path, "r+b") as w:
+                w.write(data)
+        t = os.stat(path).st_mtime_ns - 7_200 * 1_000_000_000
+        os.utime(path, ns=(t, t))
+        stamp["t"] = os.stat(path).st_mtime_ns
+
+    for label, replace, vol in (("rewritten in place during the read", False,
+                                 b",107\r\n"),
+                                ("replaced by a new file after the read",
+                                 True, b",108\r\n")):
+        root = ss.storage_root(base / ("unstable-" + vol[1:4].decode()))
+        files = _rs_build(root)
+        csvp = files["RSA_2024-12_1m.csv"]
+        new = csvp.read_bytes().replace(b",100\r\n", vol, 1)
+        stamp = {}
+        _rs_retime([csvp])
+
+        def hook(p, a, k, csvp=csvp, new=new, stamp=stamp, replace=replace):
+            act = lambda: rewrite(csvp, new, stamp, replace)   # noqa: E731
+            if p.name != csvp.name:
+                return _RsHandle(p)
+            if replace:
+                return _RsHandle(p, on_close=act)
+            return _RsHandle(p, during_read=act)
+
+        with _RsSpy(hook=hook) as spy:
+            res = ss.scan_storage(root, workers=1)
+        ent = _rs_entry(root, csvp) or {}
+        rec(f"unstable ({label}): not trusted, re-read",
+            bool(stamp) and spy.opens == [csvp.name]
+            and spy.reads == [csvp.name] and not res["errors"]
+            and ent.get("sha256") == _rs_sha(new)
+            and ent.get("mtime_ns") == stamp.get("t"),
+            f"{stamp} {spy.opens} {spy.reads} {res['errors']} {ent}")
+
+    root = ss.storage_root(base / "unstable-grow")
+    files = _rs_build(root)
+    csvp = files["RSA_2024-12_1m.csv"]
+    old = csvp.read_bytes()
+    src = ss.month_file_path(ss.storage_root(base / "unstable-grow-src"),
+                             "RSA", 2024, 12, "1m", fmt="csv")
+    ss.write_month_file(src, [(datetime(2024, 12, 2, 9, 30 + i),
+                               10.0, 10.5, 9.5, 10.25, 100 + i)
+                              for i in range(4)])
+    grown = src.read_bytes()               # the same three bars and one more
+    _rs_retime([csvp])
+    kept = {}
+
+    def append_bar():
+        # During the read: one more bar appended, then the modified time put
+        # back, so only the size tells the four stats apart.
+        if kept:
+            return
+        st = os.stat(csvp)
+        with open(csvp, "ab") as w:
+            w.write(grown[len(old):])
+        os.utime(csvp, ns=(st.st_atime_ns, st.st_mtime_ns))
+        kept["t"] = st.st_mtime_ns
+        kept["same time"] = os.stat(csvp).st_mtime_ns == st.st_mtime_ns
+
+    def grow_hook(p, a, k):
+        if p.name != csvp.name:
+            return _RsHandle(p)
+        return _RsHandle(p, during_read=append_bar)
+
+    with _RsSpy(hook=grow_hook) as spy:
+        res = ss.scan_storage(root, workers=1)
+    ent = _rs_entry(root, csvp) or {}
+    rec("unstable (grows during the read, its time put back): not trusted, "
+        "re-read",
+        grown.startswith(old) and len(grown) > len(old)
+        and kept.get("same time") is True
+        and spy.opens == [csvp.name] and spy.reads == [csvp.name]
+        and not res["errors"] and not res["warnings"]
+        and ent.get("rows") == 4 and ent.get("size") == len(grown)
+        and ent.get("sha256") == _rs_sha(grown)
+        and ent.get("mtime_ns") == kept.get("t") == csvp.stat().st_mtime_ns,
+        f"{len(old)} {len(grown)} {kept} {spy.opens} {spy.reads} "
+        f"{res['errors']} {res['warnings']} {ent}")
+
+    root = ss.storage_root(base / "unstable-swap")
+    files = _rs_build(root)
+    tgt = files["RSB_2025-03_1m.parquet"]
+    _rs_retime([tgt])
+    swapped = {}
+
+    def swap_before_open(p, a, k):
+        # After the compare-time stat, before the open: a new file with the
+        # SAME bytes (so the fingerprint matches) and another time.
+        if p.name == tgt.name and not swapped:
+            tmpf = p.with_name(p.name + ".swap")
+            tmpf.write_bytes(p.read_bytes())
+            t = os.stat(p).st_mtime_ns + 3_600 * 1_000_000_000
+            os.utime(tmpf, ns=(t, t))
+            os.replace(tmpf, p)
+            swapped["t"] = os.stat(p).st_mtime_ns
+        return _RsHandle(p)
+
+    with _RsSpy(hook=swap_before_open) as spy:
+        res = ss.scan_storage(root, workers=1)
+    ent = _rs_entry(root, tgt) or {}
+    rec("unstable (replaced by the same bytes between the stat and the "
+        "open): not trusted, re-read, the new file's time recorded",
+        bool(swapped) and spy.opens == [tgt.name] and spy.reads == [tgt.name]
+        and not res["errors"] and ent.get("mtime_ns") == swapped.get("t")
+        and ent.get("sha256") == _rs_sha(tgt.read_bytes()),
+        f"{swapped} {spy.opens} {spy.reads} {res['errors']} {ent}")
+
+    root = ss.storage_root(base / "unstable-long")
+    files = _rs_build(root)
+    tgt = files["RSA_2025-02_1m.parquet"]
+    real = tgt.read_bytes()
+    longer = real + b"\0"                  # one byte more than the stat said
+    _rs_edit(root, tgt, lambda e: e.update(sha256=_rs_sha(longer)))
+    _rs_retime([tgt])
+    with _RsSpy(hook=lambda p, a, k: _RsHandle(p, data=longer)) as spy:
+        res = ss.scan_storage(root, workers=1)
+    ent = _rs_entry(root, tgt) or {}
+    rec("unstable (read longer than the stat, bytes match the proof): "
+        "not trusted, re-read",
+        spy.opens == [tgt.name] and spy.reads == [tgt.name]
+        and not res["errors"] and ent.get("sha256") == _rs_sha(real),
+        f"{spy.opens} {spy.reads} {res['errors']} {ent}")
+    proof_is_real = ent.get("sha256") == _rs_sha(real)
+    _rs_retime([tgt])                      # the stats agree on a size, but the
+    with _RsSpy(hook=lambda p, a, k: _RsHandle(p, data=longer)) as spy:
+        res = ss.scan_storage(root, workers=1)   # handle yields one byte more
+    ent = _rs_entry(root, tgt) or {}
+    rec("unstable (more bytes than the stats say, the first <size> match the "
+        "proof): not trusted, re-read",
+        proof_is_real and spy.opens == [tgt.name] and spy.reads == [tgt.name]
+        and not res["errors"] and ent.get("sha256") == _rs_sha(real)
+        and ent.get("mtime_ns") == tgt.stat().st_mtime_ns,
+        f"{proof_is_real} {spy.opens} {spy.reads} {res['errors']} {ent}")
+
+    root = ss.storage_root(base / "unstable-other")
+    files = _rs_build(root)
+    tgt = files["RSA_2025-02_1m.parquet"]
+    decoy = Path(base) / "decoy.bin"
+    decoy.write_bytes(tgt.read_bytes())    # same bytes, another file
+    for n, label in ((0, "before"), (1, "after")):
+        _rs_retime([tgt])
+        st = os.stat(tgt)                  # same size AND time: only the
+        os.utime(decoy, ns=(st.st_atime_ns, st.st_mtime_ns))   # identity differs
+        with open(decoy, "rb") as other:
+            def hook(p, a, k, n=n, fd=other.fileno()):
+                return _RsHandle(p, swap=(n, fd))
+
+            with _RsSpy(hook=hook) as spy:
+                res = ss.scan_storage(root, workers=1)
+        rec(f"unstable (handle on another file {label} the read): "
+            "not trusted, re-read",
+            spy.opens == [tgt.name] and spy.reads == [tgt.name]
+            and not res["errors"], f"{spy.opens} {spy.reads} {res['errors']}")
+
+    root = ss.storage_root(base / "unstable-error")
+    files = _rs_build(root)
+    tgt = files["RSB_2025-01_1m.parquet"]    # RSB's first month: no stale
+    _rs_retime([tgt])                        # read state from an earlier one
+    fail = PermissionError(13, "lock appeared mid-read", str(tgt))
+    with _RsSpy(hook=lambda p, a, k: _RsHandle(p, fail=fail)) as spy:
+        res = ss.scan_storage(root, workers=1)
+    ent = _rs_entry(root, tgt) or {}
+    rec("unstable (read error): falls through silently, re-read as before",
+        spy.opens == [tgt.name] and spy.reads == [tgt.name]
+        and not res["errors"] and not res["warnings"]
+        and ent.get("sha256") == _rs_sha(tgt.read_bytes())
+        and ent.get("mtime_ns") == tgt.stat().st_mtime_ns,
+        f"{spy.opens} {spy.reads} {res['errors']} {res['warnings']} {ent}")
+
+    root = ss.storage_root(base / "unstable-gone")
+    files = _rs_build(root)
+    tgt = files["RSA_2025-01_1m.parquet"]
+    _rs_retime([tgt])
+    before = _rs_entry(root, tgt)
+
+    def vanish(p, a, k):
+        os.unlink(p)
+        return open(p, *a, **k)            # FileNotFoundError, as in a race
+
+    with _RsSpy(hook=vanish) as spy:
+        res = ss.scan_storage(root, workers=1)
+    try:
+        ss.read_month_file(tgt)
+        want = None
+    except (ss.StorageError, OSError) as exc:
+        want = f"unreadable: {exc}"
+    rec("unstable (vanished before the read): one error, the old text, "
+        "entry kept",
+        want is not None and _rs_errors(res) == [(tgt, want)]
+        and spy.reads == [tgt.name] and _rs_entry(root, tgt) == before,
+        f"{want!r} {res['errors']} {spy.reads}")
+
+    if os.name != "nt":
+        rec("unstable (real byte-range lock): skipped, not Windows", True)
+        return
+    import msvcrt
+    root = ss.storage_root(base / "unstable-locked")
+    files = _rs_build(root)
+    tgt = files["RSB_2025-03_1m.parquet"]
+    _rs_retime([tgt])
+    before = _rs_entry(root, tgt)
+    size = tgt.stat().st_size
+    with open(tgt, "rb") as holder:
+        msvcrt.locking(holder.fileno(), msvcrt.LK_NBLCK, size)
+        try:
+            with _RsSpy() as spy:
+                res = ss.scan_storage(root, workers=1)
+            try:
+                ss.read_month_file(tgt)
+                want = None
+            except (ss.StorageError, OSError) as exc:
+                want = f"unreadable: {exc}"
+        finally:
+            holder.seek(0)
+            msvcrt.locking(holder.fileno(), msvcrt.LK_UNLCK, size)
+    rec("unstable (real byte-range lock): the old error, entry kept",
+        want is not None and _rs_errors(res) == [(tgt, want)]
+        and spy.opens == [tgt.name] and spy.reads == [tgt.name]
+        and _rs_entry(root, tgt) == before,
+        f"{want!r} {res['errors']} {spy.opens} {spy.reads}")
+
+
+_RS_SCENARIOS = (_rs_times_changed, _rs_same_size, _rs_no_proof,
+                 _rs_evidence, _rs_unstable)
+
+
+def _resettle_battery(base):
+    """Plan checks 1-6 on fresh scratch banks under `base`; returns
+    [(name, ok, detail)] and prints nothing."""
+    out = []
+
+    def rec(name, ok, detail=""):
+        out.append((name, bool(ok), detail))
+
+    base = Path(base)
+    base.mkdir(parents=True, exist_ok=True)
+    for scenario in _RS_SCENARIOS:
+        try:
+            scenario(base, rec)
+        except Exception as exc:  # noqa: BLE001 - a crash is a failed check
+            rec(f"{scenario.__name__} ran to its end", False,
+                f"{type(exc).__name__}: {exc}")
+    return out
+
+
+def run_resettle(tmp):
+    print("[18] fingerprint resettle after a copy or move (plan checks 1-7)")
+    for name, ok, detail in _resettle_battery(Path(tmp) / "resettle"):
+        check(name, ok, detail)
+    original = ss._scan_ticker
+    source = inspect.getsource(original)
+    for i, (label, pattern, repl) in enumerate(_RS_MUTANTS):
+        mutated, hits = re.subn(pattern, repl, source)
+        if hits != 1:
+            check(f"mutant goes red: {label}", False,
+                  f"pattern matched {hits} times")
+            continue
+        try:
+            exec(compile(mutated, f"<mutant: {label}>", "exec"), ss.__dict__)
+            got = _resettle_battery(Path(tmp) / f"resettle-mutant{i}")
+        finally:
+            ss._scan_ticker = original
+        red = [name for name, ok, _d in got if not ok]
+        check(f"mutant goes red: {label} ({len(red)} check(s) fail)",
+              bool(red), "no check failed")
 
 
 if __name__ == "__main__":

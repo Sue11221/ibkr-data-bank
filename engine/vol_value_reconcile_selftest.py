@@ -1450,22 +1450,28 @@ def run_shared_reconciler_checks(base: Path) -> None:
     scanner_captured = threading.Event()
     scanner_release = threading.Event()
     scanner_report = {}
-    original_read_month = storage.read_month_file
+    original_transaction = storage.ticker_transaction
 
-    def blocked_scanner_read(path, *args, **kwargs):
-        value = original_read_month(path, *args, **kwargs)
+    @contextmanager
+    def blocked_scanner_publication(ticker_dir):
+        # The scanner has walked the month (a full re-read, or a fingerprint
+        # resettle when only its modified time moved) and holds a now-stale
+        # entry: keep it here, just before it publishes, while the
+        # correction commits.
         if (threading.current_thread().name == "row51-stale-scanner"
-                and Path(path).resolve() == scanner_path.resolve()):
+                and Path(ticker_dir).name == "SCANRACE"
+                and not scanner_captured.is_set()):
             scanner_captured.set()
             if not scanner_release.wait(15):
                 raise RuntimeError("scanner race fixture timed out")
-        return value
+        with original_transaction(ticker_dir):
+            yield
 
     def scan_while_correction_commits():
         scanner_report["value"] = storage.scan_storage(
             scanner_root, workers=1, digest_cache=False)
 
-    storage.read_month_file = blocked_scanner_read
+    storage.ticker_transaction = blocked_scanner_publication
     scanner_thread = threading.Thread(
         target=scan_while_correction_commits,
         name="row51-stale-scanner")
@@ -1479,7 +1485,7 @@ def run_shared_reconciler_checks(base: Path) -> None:
     finally:
         scanner_release.set()
         scanner_thread.join(20)
-        storage.read_month_file = original_read_month
+        storage.ticker_transaction = original_transaction
     scanner_manifest = storage.load_manifest(
         scanner_root / "SCANRACE") or {}
     scanner_entry = ((((scanner_manifest.get("intervals") or {})
